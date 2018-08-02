@@ -1,0 +1,74 @@
+{
+  "name": "crypto-re-balancer",
+  "version": "0.0.0",
+  "license": "",
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "pretest": "tsc",
+    "test": "nyc mocha",
+    "watch": "mocha-typescript-watch",
+    "prepare": "tsc",
+    "fetch": "ts-node ./src/fetcher.ts"
+  },
+  "dependencies": {
+    "binance-api-node": "^0.8.2",
+    "bluebird": "^3.5.1",
+    "chart.js": "^2.7.2",
+    "level-js": "^3.0.0",
+    "leveldown": "^4.0.1",
+    "linvodb3": "^3.25.2",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.1",
+    "nedb": "^1.8.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-stockcharts": "^0.7.7",
+    "source-map-support": "^0.5.5"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.0.0-beta.52",
+    "@types/chai": "^4.1.4",
+    "@types/chart.js": "^2.7.27",
+    "@types/lodash": "^4.14.112",
+    "@types/mocha": "^5.2.4",
+    "@types/mongodb": "^3.1.1",
+    "@types/nedb": "^1.8.5",
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "chai": "^4.1.2",
+    "electron": "2.0.0",
+    "electron-builder": "^20.11.1",
+    "electron-webpack": "^2.0.1",
+    "electron-webpack-ts": "^2.0.2",
+    "mocha-typescript": "^1.1.16",
+    "nyc": "^12.0.2",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2",
+    "webpack": "^4.8.1"
+  },
+  "resolutions": {
+    "webpack-sources": "1.0.1"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "test/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "all": true
+  }
+}
