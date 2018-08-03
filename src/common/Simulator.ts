@@ -1,57 +1,12 @@
-import { Big } from "big.js";
-import * as moment from 'moment'
-
 import { IAdvisor } from "./Advisor";
-import { CandleChartResult } from "binance-api-node";
-import CandleRepo from "./CandleRepo";
-import { Asset, AssetSymbol } from "./Asset";
+import { Chandelier } from "./Chandelier";
 import { MultiAssetsCandle } from "./MultiAssetsCandle";
-import { MultiAssetsCandleFactory } from "./MultiAssetsCandleFactory";
-import { RebalanceTransaction } from "./RebalanceTransaction";
 import { PorfolioBalance } from "./PorfolioBalance";
+import { PorfolioCandle } from "./PorfolioCandle";
+import { RebalanceTransaction } from "./RebalanceTransaction";
+
 
 // roundtrips, transaction
-
-class Chandelier {
-  public candles: MultiAssetsCandle[]
-
-  constructor(
-    private assets: Asset[],
-    private candleRepo: CandleRepo,
-  ) {
-
-  }
-
-  async load() {
-    const fromTime = moment().add(-1, 'year')
-    const candlesOfAssets = await Promise.all(this.assets.map(async (asset) => {
-      const candles = await this.candleRepo.findAllSince(asset.symbol, '1d', fromTime.toDate())
-      return candles
-    }))
-
-    const fac = new MultiAssetsCandleFactory(this.assets, candlesOfAssets)
-    this.candles = fac.candles
-  }
-}
-
-class PorfolioCandle {
-  constructor(
-    public timestamp: number,
-    public porfolioBalance: PorfolioBalance,
-    public exchangeRatesByAssets: Map<AssetSymbol, Big>,
-  ) {}
-
-  get quoteBalancesByAssets() {
-    const balance: Map<AssetSymbol, Big> = new Map()
-    for (const symbol of this.porfolioBalance.assetSymbols) {
-      const exchangeRate = this.exchangeRatesByAssets.get(symbol)
-      const quoteBalance = this.porfolioBalance.quote(symbol, exchangeRate)
-      balance.set(symbol, quoteBalance)
-    }
-
-    return balance
-  }
-}
 
 export class Simulator {
   private totalFeeCosts = 0
