@@ -1,9 +1,8 @@
-import { CandleChartResult } from "binance-api-node";
-import { IAdvisor, Advice } from "./Advisor";
+import { Advice, IAdvisor, ICandle } from "./Advisor";
 
 export class AdvisorPeriodic implements IAdvisor {
   private lastRebalance: number = 0 // timestamp
-  private firstCandle: CandleChartResult
+  private firstCandle: ICandle
 
   constructor(
     private readonly rebalanceInterval: number, // milliseconds
@@ -12,23 +11,23 @@ export class AdvisorPeriodic implements IAdvisor {
 
   }
 
-  update(candle: CandleChartResult): Advice {
+  update(candle: ICandle): Advice {
     if (!this.firstCandle) {
       this.firstCandle = candle
     }
 
-    if (candle.openTime < (this.firstCandle.openTime + this.kickoffDelay)) {
+    if (candle.timestamp < (this.firstCandle.timestamp + this.kickoffDelay)) {
       return {
         action: 'hold'
       }
     }
 
     if (this.lastRebalance === 0) {
-      return this.rebalance(candle.openTime)
+      return this.rebalance(candle.timestamp)
     }
     
-    if (candle.openTime < this.lastRebalance + this.rebalanceInterval) {
-      return this.rebalance(candle.openTime)
+    if (candle.timestamp < this.lastRebalance + this.rebalanceInterval) {
+      return this.rebalance(candle.timestamp)
     }
 
     return {

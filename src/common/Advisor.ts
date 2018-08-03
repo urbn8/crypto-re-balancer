@@ -1,6 +1,6 @@
 import { CandleChartResult } from "binance-api-node";
 
-interface ICandle {
+export interface ICandle {
   readonly timestamp: number
 }
 

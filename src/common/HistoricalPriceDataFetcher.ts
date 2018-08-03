@@ -13,6 +13,7 @@ export default class HistoricalPriceDataFetcher {
     console.log('START')
     for (const symbol of ['BTCUSDT', 'EOSUSDT', 'ETHUSDT', 'BNBUSDT', 'NEOUSDT', 'BCCUSDT', 'TRXUSDT', 'XRPUSDT', 'ETCUSDT', 'LTCUSDT']) {
       console.log('symbol', symbol)
+      await this.executeSymbol(symbol, '1m')
       await this.executeSymbol(symbol, '1h')
       await this.executeSymbol(symbol, '1d')
     }

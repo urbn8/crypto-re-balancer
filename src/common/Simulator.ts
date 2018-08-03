@@ -16,10 +16,7 @@ export class Simulator {
   constructor(
     private initialPorfolioBalance: PorfolioBalance,
     private advisor: IAdvisor,
-    private chandelier: Chandelier,
-  ) {
-
-  }
+  ) {}
 
   get porfolioBalance(): PorfolioBalance {
     if (this.transactions.length === 0) {
@@ -29,9 +26,9 @@ export class Simulator {
     return this.transactions[this.transactions.length - 1].rebalanced
   }
 
-  async execute() {
-    await this.chandelier.load()
-    return this.porfolioCandles(this.chandelier)
+  async execute(chandelier: Chandelier) {
+    await chandelier.load()
+    return this.porfolioCandles(chandelier)
   }
 
   porfolioCandles(chandelier: Chandelier): PorfolioCandle[] {
