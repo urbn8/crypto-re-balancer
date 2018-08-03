@@ -1,11 +1,21 @@
 import { AssetSymbol } from "./Asset";
 import { CandleChartResult } from "binance-api-node";
+import { Big } from "big.js";
 
 export class MultiAssetsCandle {
   constructor(
     public timestamp: number,
     public data: Map<AssetSymbol, CandleChartResult>,
   ) {}
+
+  get exchangeRate(): Map<AssetSymbol, Big> {
+    const data: Map<AssetSymbol, Big> = new Map()
+    this.data.forEach((candle, assetSymbol) => {
+      data.set(assetSymbol, new Big(candle.close))
+    })
+
+    return data
+  }
 
   static fromCandlesSet(timestamp: number, assetSymbols: AssetSymbol[], candlesSet: CandleChartResult[]): MultiAssetsCandle {
     if (assetSymbols.length !== candlesSet.length) {

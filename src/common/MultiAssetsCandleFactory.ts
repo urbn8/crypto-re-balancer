@@ -8,7 +8,6 @@ export class MultiAssetsCandleFactory {
   constructor(
     private assets: Asset[],
     private candlesOfAssets: CandleChartResult[][],
-    private interval: number,
   ) {
     if (assets.length !== candlesOfAssets.length) {
       throw new Error('assets.length !== candlesOfAssets.length')

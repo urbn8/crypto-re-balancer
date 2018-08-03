@@ -5,6 +5,8 @@ import { IAdvisor } from "./Advisor";
 import { CandleChartResult } from "binance-api-node";
 import CandleRepo from "./CandleRepo";
 import { Asset, AssetSymbol } from "./Asset";
+import { MultiAssetsCandle } from "./MultiAssetsCandle";
+import { MultiAssetsCandleFactory } from "./MultiAssetsCandleFactory";
 
 // roundtrips, transaction
 
@@ -61,6 +63,8 @@ type Tick = {
 
 
 class Chandelier {
+  public candles: MultiAssetsCandle[]
+
   constructor(
     private assets: Asset[],
     private candleRepo: CandleRepo,
@@ -75,15 +79,8 @@ class Chandelier {
       return candles
     }))
 
-    this.makeMultiAssetsCandles(candlesOfAssets)
-  }
-
-  makeMultiAssetsCandles(candlesOfAssets: CandleChartResult[][]) {
-    
-  }
-
-  get ticks(): Tick[] {
-    
+    const fac = new MultiAssetsCandleFactory(this.assets, candlesOfAssets)
+    this.candles = fac.candles
   }
 }
 
@@ -99,8 +96,8 @@ export class Simulator {
 
   }
 
-  async execute(candles: CandleChartResult[]) {
-    for (const candle of candles) {
+  async execute(chandelier: Chandelier) {
+    for (const candle of chandelier.candles) {
       const advice = this.advisor.update(candle)
       if (advice.action === 'rebalance') {
         await this.rebalance(candle)
@@ -108,11 +105,11 @@ export class Simulator {
     }
   }
 
-  async rebalance(candle: CandleChartResult) {
+  async rebalance(candle: MultiAssetsCandle) {
     if (this.transactions.length === 0) {
       this.transactions.push(new RebalanceTransaction(
         this.porfolioBalance,
-
+        candle.exchangeRate,
       ))
     }
   }

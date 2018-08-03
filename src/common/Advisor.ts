@@ -1,5 +1,9 @@
 import { CandleChartResult } from "binance-api-node";
 
+interface ICandle {
+  readonly timestamp: number
+}
+
 export type AdviceAction = 'hold' | 'rebalance'
 
 export interface Advice {
@@ -7,5 +11,5 @@ export interface Advice {
 }
 
 export interface IAdvisor {
-  update(candle: CandleChartResult)
+  update(candle: ICandle)
 }
