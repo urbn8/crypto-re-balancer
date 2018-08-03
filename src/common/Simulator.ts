@@ -7,60 +7,10 @@ import CandleRepo from "./CandleRepo";
 import { Asset, AssetSymbol } from "./Asset";
 import { MultiAssetsCandle } from "./MultiAssetsCandle";
 import { MultiAssetsCandleFactory } from "./MultiAssetsCandleFactory";
+import { RebalanceTransaction } from "./RebalanceTransaction";
+import { PorfolioBalance } from "./PorfolioBalance";
 
 // roundtrips, transaction
-
-class PorfolioBalance {
-  constructor(
-    private amountsByAssets: Map<AssetSymbol, Big>
-  ) {
-
-  }
-
-  get size(): number {
-    return this.amountsByAssets.size
-  }
-
-  get assetSymbols(): AssetSymbol[] {
-    return Array.from(this.amountsByAssets.keys())
-  }
-
-  quote(assetSymbol: AssetSymbol, exchangeRate: Big): Big | undefined {
-    const baseAmount = this.amountsByAssets.get(assetSymbol)
-    if (typeof baseAmount === 'undefined') {
-      return undefined
-    }
-
-    return baseAmount.times(exchangeRate)
-  }
-}
-
-class RebalanceTransaction {
-  constructor(
-    private readonly initialPorfolioBalance: PorfolioBalance,
-    private readonly exchangeRatesByAssets: Map<AssetSymbol, Big>,
-  ) {
-    // validate
-    if (initialPorfolioBalance.size != exchangeRatesByAssets.size) {
-      throw new Error('initialPorfolioBalance.size != exchangeRatesByAssets.size')
-    }
-
-    for (const assetSymbol of initialPorfolioBalance.assetSymbols) {
-      if (!exchangeRatesByAssets.has(assetSymbol)) {
-        throw new Error('!exchangeRatesByAssets.has(assetSymbol)')
-      }
-    }
-  }
-
-  get rebalanced(): PorfolioBalance {
-    return null
-  }
-}
-
-type Tick = {
-  timestamp: number
-}
-
 
 class Chandelier {
   public candles: MultiAssetsCandle[]
@@ -84,33 +34,78 @@ class Chandelier {
   }
 }
 
+class PorfolioCandle {
+  constructor(
+    public timestamp: number,
+    public porfolioBalance: PorfolioBalance,
+    public exchangeRatesByAssets: Map<AssetSymbol, Big>,
+  ) {}
+
+  get quoteBalancesByAssets() {
+    const balance: Map<AssetSymbol, Big> = new Map()
+    for (const symbol of this.porfolioBalance.assetSymbols) {
+      const exchangeRate = this.exchangeRatesByAssets.get(symbol)
+      const quoteBalance = this.porfolioBalance.quote(symbol, exchangeRate)
+      balance.set(symbol, quoteBalance)
+    }
+
+    return balance
+  }
+}
+
 export class Simulator {
   private totalFeeCosts = 0
   private totalTradedVolume = 0
   private transactions: RebalanceTransaction[] = []
 
   constructor(
-    private porfolioBalance: PorfolioBalance,
+    private initialPorfolioBalance: PorfolioBalance,
     private advisor: IAdvisor,
+    private chandelier: Chandelier,
   ) {
 
   }
 
-  async execute(chandelier: Chandelier) {
+  get porfolioBalance(): PorfolioBalance {
+    if (this.transactions.length === 0) {
+      return this.initialPorfolioBalance
+    }
+
+    return this.transactions[this.transactions.length - 1].rebalanced
+  }
+
+  async execute() {
+    await this.chandelier.load()
+    return this.porfolioCandles(this.chandelier)
+  }
+
+  porfolioCandles(chandelier: Chandelier): PorfolioCandle[] {
+    const porfolioCandles: PorfolioCandle[] = []
     for (const candle of chandelier.candles) {
       const advice = this.advisor.update(candle)
       if (advice.action === 'rebalance') {
-        await this.rebalance(candle)
+        this.rebalance(candle)
       }
+
+      const porfolioCandle = new PorfolioCandle(candle.timestamp, this.porfolioBalance, candle.exchangeRate)
+      porfolioCandles.push(porfolioCandle)
     }
+
+    return porfolioCandles
   }
 
-  async rebalance(candle: MultiAssetsCandle) {
+  rebalance(candle: MultiAssetsCandle) {
     if (this.transactions.length === 0) {
       this.transactions.push(new RebalanceTransaction(
-        this.porfolioBalance,
+        this.initialPorfolioBalance,
         candle.exchangeRate,
       ))
+      return
     }
+
+    this.transactions.push(new RebalanceTransaction(
+      this.transactions[this.transactions.length - 1].rebalanced,
+      candle.exchangeRate,
+    ))
   }
 }
