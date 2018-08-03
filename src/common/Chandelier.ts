@@ -23,5 +23,6 @@ export class Chandelier {
 
     const fac = new MultiAssetsCandleFactory(this.assets, candlesOfAssets)
     this.candles = fac.candles
+    return this.candles
   }
 }

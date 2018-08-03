@@ -8,6 +8,15 @@ import { RebalanceTransaction } from "./RebalanceTransaction";
 
 // roundtrips, transaction
 
+export class BacktestResult {
+  constructor(
+    public ohlcCandles: MultiAssetsCandle[],
+    public porfolioCandles: PorfolioCandle[],
+  ) {}
+
+
+}
+
 export class Simulator {
   private totalFeeCosts = 0
   private totalTradedVolume = 0
@@ -26,9 +35,13 @@ export class Simulator {
     return this.transactions[this.transactions.length - 1].rebalanced
   }
 
-  async execute(chandelier: Chandelier) {
-    await chandelier.load()
-    return this.porfolioCandles(chandelier)
+  async backtest(chandelier: Chandelier): Promise<BacktestResult> {
+    const multiAssetsCandle = await chandelier.load()
+    const porfolioCandles = this.porfolioCandles(chandelier)
+    return new BacktestResult(
+      multiAssetsCandle,
+      porfolioCandles,
+    )
   }
 
   porfolioCandles(chandelier: Chandelier): PorfolioCandle[] {

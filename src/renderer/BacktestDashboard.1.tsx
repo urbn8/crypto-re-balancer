@@ -4,17 +4,36 @@ import * as React from "react";
 import { Chart } from 'chart.js'
 import * as Color from 'color'
 
-import CandleMgoRepo from '../common/CandleMgoRepo'
-import backtest from "../common/backtest";
-import { Chandelier } from '../common/Chandelier';
-import { Asset } from '../common/Asset';
+// import CandleMgoRepo from '../common/CandleMgoRepo'
+// import CandleLinvodb3Repo from '../common/CandleLinvodb3Repo'
+import CandleNedbRepo from '../common/CandleNedbRepo'
+import Backtester from "../common/Backtester";
+import HistoricalPriceDataFetcher from '../common/HistoricalPriceDataFetcher';
 
 declare var __static: string
 declare var CanvasJS: any
 
-const candleRepo = new CandleMgoRepo()
+// const candleRepo = new CandleMgoRepo()
+// const candleRepo = new CandleLinvodb3Repo()
+const candleRepo = new CandleNedbRepo()
 
-export default class BacktestDashboard extends React.Component<any, void> {
+const convertChartData = (candle) => {
+  return {
+    t: candle.openTime,
+    y: candle.close,
+  }
+}
+
+function transparentize(color, opacity?) {
+  var alpha = opacity === undefined ? 0.5 : 1 - opacity;
+  return Color(color).alpha(alpha).rgbString();
+}
+
+interface IState {
+  initing: boolean
+}
+
+export default class BacktestDashboard extends React.Component<any, IState> {
 
   // private canvas: React.RefObject<HTMLCanvasElement>
   private canvas: React.RefObject<HTMLDivElement>
@@ -22,6 +41,10 @@ export default class BacktestDashboard extends React.Component<any, void> {
   constructor(props) {
     super(props);
     this.canvas = React.createRef();
+
+    this.state = {
+      initing: true
+    }
   }
 
   async componentDidMount() {
@@ -33,30 +56,18 @@ export default class BacktestDashboard extends React.Component<any, void> {
       document.head.appendChild(script);
     }
 
+    console.log('candleRepo.findAllOneYear')
     const btc = await candleRepo.findAllOneYear('BTCUSDT', '1d')
+    console.log('btc.length', btc.length)
+    if (btc.length === 0) {
+      const fetcher = new HistoricalPriceDataFetcher()
+      await fetcher.execute()
+    }
+    this.setState({initing: false})
 
-    const assets: Asset[] = [
-      {
-        symbol: 'BTCUSDT',
-        name: 'Bitcoin',
-        icon: '',
-        color: 'rgb(255, 205, 86)',
-      },
-      {
-        symbol: 'ETHUSDT',
-        name: 'Ethereum',
-        icon: '',
-        color: 'rgb(153, 102, 255)',
-      },
-      {
-        symbol: 'BNBUSDT',
-        name: 'BNB',
-        icon: '',
-        color: 'rgb(201, 203, 207)',
-      },
-    ]
-
-    const backtestResult = await backtest.backtest(new Chandelier(assets, candleRepo))
+    const backtester = new Backtester()
+    const [porfolio, porfolioTicks] = await backtester.oneYearBacktest()
+    console.log('porfolioTicks', porfolioTicks)
 
     const data = porfolio.assetBalances.map((assetBalance, i) => {
       return {
@@ -113,9 +124,60 @@ export default class BacktestDashboard extends React.Component<any, void> {
     }
 
     this.canvas.current.addEventListener("mousewheel", mouseWheelHandler, false);
+
+    // const datasets = porfolio.assetBalances.map((assetBalance, i) => {
+    //   return {
+    //     label: assetBalance.asset.symbol,
+    //     data: porfolioTicks.filter((porfolioTick) => {
+    //       return !!porfolioTick.assetBalances[i].value
+    //     }).map((porfolioTick) => ({
+    //       t: porfolioTick.datetime,
+    //       y: porfolioTick.assetBalances[i].value,
+    //     })),
+    //     type: 'line',
+    //     pointRadius: 0,
+    //     fill: true,
+    //     lineTension: 0,
+    //     borderWidth: 2,
+    //     backgroundColor: transparentize(assetBalance.asset.color),
+    //     borderColor: assetBalance.asset.color,
+    //   }
+    // })
+
+    // var ctx = this.canvas.current.getContext('2d');
+    
+    // var cfg = {
+		// 	type: 'line',
+		// 	data: {
+		// 		// labels: labels,
+		// 		datasets,
+		// 	},
+		// 	options: {
+		// 		scales: {
+		// 			xAxes: [{
+		// 				type: 'time',
+		// 				distribution: 'series' as any,
+		// 				// ticks: {
+		// 				// 	source: 'labels'
+		// 				// }
+		// 			}],
+		// 			yAxes: [{
+		// 				scaleLabel: {
+		// 					display: true,
+		// 					labelString: 'Closing price ($)'
+		// 				}
+		// 			}]
+		// 		}
+		// 	}
+		// };
+		// var chart = new Chart(ctx, cfg);
   }
 
 	render() {
+    if (this.state.initing) {
+      return <h2>loading</h2>
+    }
+
     return (
       <div ref={this.canvas} style={{height: '100%'}}></div>
     )
