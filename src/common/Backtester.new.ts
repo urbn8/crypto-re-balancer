@@ -1,6 +1,7 @@
 import * as moment from 'moment'
 import * as _ from 'lodash'
-import { Asset, PeriodicRebalanceConfig, Porfolio, AssetBalance } from "./Rebalancer";
+import { PeriodicRebalanceConfig, Porfolio, AssetBalance } from "./Rebalancer";
+import { Asset } from "./Asset";
 import { CandleChartResult, CandleChartInterval } from 'binance-api-node';
 import { Big } from 'big.js';
 

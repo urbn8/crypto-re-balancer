@@ -1,18 +1,12 @@
 import { Big } from "big.js";
+import * as moment from 'moment'
+
 import { IAdvisor } from "./Advisor";
 import { CandleChartResult } from "binance-api-node";
+import CandleRepo from "./CandleRepo";
+import { Asset, AssetSymbol } from "./Asset";
 
 // roundtrips, transaction
-
-class Backtester {
-  
-}
-
-interface IStrategy {
-
-}
-
-type AssetSymbol = string
 
 class PorfolioBalance {
   constructor(
@@ -39,8 +33,6 @@ class PorfolioBalance {
   }
 }
 
-
-
 class RebalanceTransaction {
   constructor(
     private readonly initialPorfolioBalance: PorfolioBalance,
@@ -63,7 +55,39 @@ class RebalanceTransaction {
   }
 }
 
-class Simulator {
+type Tick = {
+  timestamp: number
+}
+
+
+class Chandelier {
+  constructor(
+    private assets: Asset[],
+    private candleRepo: CandleRepo,
+  ) {
+
+  }
+
+  async load() {
+    const fromTime = moment().add(-1, 'year')
+    const candlesOfAssets = await Promise.all(this.assets.map(async (asset) => {
+      const candles = await this.candleRepo.findAllSince(asset.symbol, '1d', fromTime.toDate())
+      return candles
+    }))
+
+    this.makeMultiAssetsCandles(candlesOfAssets)
+  }
+
+  makeMultiAssetsCandles(candlesOfAssets: CandleChartResult[][]) {
+    
+  }
+
+  get ticks(): Tick[] {
+    
+  }
+}
+
+export class Simulator {
   private totalFeeCosts = 0
   private totalTradedVolume = 0
   private transactions: RebalanceTransaction[] = []
@@ -75,7 +99,7 @@ class Simulator {
 
   }
 
-  async execute(candles: CandleChartResult[], txFee: Big, strategy: IStrategy) {
+  async execute(candles: CandleChartResult[]) {
     for (const candle of candles) {
       const advice = this.advisor.update(candle)
       if (advice.action === 'rebalance') {
@@ -85,6 +109,11 @@ class Simulator {
   }
 
   async rebalance(candle: CandleChartResult) {
+    if (this.transactions.length === 0) {
+      this.transactions.push(new RebalanceTransaction(
+        this.porfolioBalance,
 
+      ))
+    }
   }
 }
