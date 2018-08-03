@@ -1,5 +1,5 @@
 import { Big } from "big.js";
-import { IAdvisor } from "./Advicer";
+import { IAdvisor } from "./Advisor";
 import { CandleChartResult } from "binance-api-node";
 
 // roundtrips, transaction

@@ -1,7 +1,7 @@
 import { CandleChartResult } from "binance-api-node";
-import { IAdvisor, Advice } from "./Advicer";
+import { IAdvisor, Advice } from "./Advisor";
 
-class Advisor implements IAdvisor {
+export class AdvisorPeriodic implements IAdvisor {
   private lastRebalance: number = 0 // timestamp
   private firstCandle: CandleChartResult
   private lastCandle: CandleChartResult
@@ -28,7 +28,7 @@ class Advisor implements IAdvisor {
     }
     
     return {
-      action: 'hold'
+      action: 'rebalance'
     }
   }
 }
