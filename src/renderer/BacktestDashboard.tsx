@@ -5,7 +5,7 @@ import { Chart } from 'chart.js'
 import * as Color from 'color'
 
 // import CandleMgoRepo from '../common/CandleMgoRepo'
-import CandleLinvodb3Repo from '../common/CandleLinvodb3Repo'
+// import CandleLinvodb3Repo from '../common/CandleLinvodb3Repo'
 import CandleNedbRepo from '../common/CandleNedbRepo'
 import Backtester from "../common/Backtester";
 import HistoricalPriceDataFetcher from '../common/HistoricalPriceDataFetcher';

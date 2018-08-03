@@ -2,6 +2,7 @@ import * as moment from 'moment'
 import * as _ from 'lodash'
 import { Asset, PeriodicRebalanceConfig, Porfolio, AssetBalance } from "./Rebalancer";
 import { CandleChartResult, CandleChartInterval } from 'binance-api-node';
+import { Big } from 'big.js';
 
 type AmountsByAssets = Map<Asset, {
   baseAmount: number
@@ -46,31 +47,32 @@ interface ICandleBalance {
   readonly amountsByAssets: AmountsByAssets
 }
 
-class RebalanceCandle {
-  private candleData: CandleChartResult
-  private rebalanceSessions: RebalanceSession[]
-  private balance: ICandleBalance
+// class RebalanceCandle {
+//   private candleData: CandleChartResult
+//   private rebalanceSessions: RebalanceSession[]
+//   private balance: ICandleBalance
 
-  constructor(
+//   constructor(
     
 
-  ) {
+//   ) {
 
-  }
+//   }
 
-  get amountByAsset(): AmountsByAssets {
-    return this.balance.amountsByAssets
-  }
+//   get amountByAsset(): AmountsByAssets {
+//     return this.balance.amountsByAssets
+//   }
 
-  static fromPrevCandle(prevCandle: RebalanceCandle): RebalanceCandle {
+//   static fromPrevCandle(prevCandle: RebalanceCandle): RebalanceCandle {
     
-  }
-}
+//   }
+// }
 
-function rebalance(prevCandle: RebalanceCandle): RebalanceCandle {
+// function rebalance(prevCandle: RebalanceCandle): RebalanceCandle {
 
-}
+// }
 
-class Backtester {
-  
-}
+
+
+
+
