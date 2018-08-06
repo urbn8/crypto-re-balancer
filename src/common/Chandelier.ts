@@ -8,7 +8,7 @@ export class Chandelier {
   public candles: MultiAssetsCandle[]
 
   constructor(
-    private assets: Asset[],
+    public assets: Asset[],
     private candleRepo: CandleRepo,
   ) {
 

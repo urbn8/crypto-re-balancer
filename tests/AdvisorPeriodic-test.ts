@@ -15,17 +15,7 @@ tape("Advisor#update", function (t: tape.Test) {
 
         // it should rebalance right away
         const advice = advisor.update({
-            "openTime" : 1511146800000.0, 
-            "open" : "36.00000000", 
-            "high" : "46.00000000", 
-            "low" : "36.00000000", 
-            "close" : "42.40000000", 
-            "volume" : "601.41100000", 
-            "closeTime" : 1511150399999.0, 
-            "quoteVolume" : "26005.98290000", 
-            "trades" : 35,
-            "baseAssetVolume" : "432.53200000", 
-            "quoteAssetVolume" : "18427.26490000"
+            "timestamp" : 1511146800000.0,
         })
 
         t.equal(advice.action, 'rebalance')

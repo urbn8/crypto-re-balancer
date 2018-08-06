@@ -37,7 +37,6 @@ export class MultiAssetsCandleFactory {
 
   takeCandlesSet(candlesOfAssets: CandleChartResult[][], candleIndicesByAssets: Map<AssetSymbol, number>): [number, CandleChartResult[]] {
     const candles: CandleChartResult[] = []
-
     for (let assetIndex = 0; assetIndex < this.assets.length; assetIndex++) {
       const assetSymbol = this.assets[0].symbol
       const candleIndex = candleIndicesByAssets.get(assetSymbol)

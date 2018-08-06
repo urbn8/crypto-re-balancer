@@ -19,4 +19,13 @@ export class PorfolioCandle {
 
     return balance
   }
+
+  get totalQuoteBalance(): Big {
+    const total: Big = new Big(0)
+    this.quoteBalancesByAssets.forEach((v) => {
+      total.add(v)
+    })
+
+    return total
+  }
 }

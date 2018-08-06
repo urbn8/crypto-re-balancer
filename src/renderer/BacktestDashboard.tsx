@@ -33,7 +33,7 @@ export default class BacktestDashboard extends React.Component<any, void> {
       document.head.appendChild(script);
     }
 
-    const btc = await candleRepo.findAllOneYear('BTCUSDT', '1d')
+    // const btc = await candleRepo.findAllOneYear('BTCUSDT', '1d')
 
     const assets: Asset[] = [
       {
@@ -58,30 +58,16 @@ export default class BacktestDashboard extends React.Component<any, void> {
 
     const backtestResult = await backtest.backtest(new Chandelier(assets, candleRepo))
 
-    const data = porfolio.assetBalances.map((assetBalance, i) => {
-      return {
-        type: "stackedArea",
-        fillOpacity: .5, 
-        markerType: 'circle',
-        markerSize: 0,
-        color: assetBalance.asset.color,
-        showInLegend: true,
-        toolTipContent: (() => {
-          if (0 === i) {
-            return `<b>Total:<b> #total<br><span style="color:${ assetBalance.asset.color }"><strong>{name}: </strong></span> {y}`
-          }
+    const dataPoints = backtestResult.porfolioBalanceHistoryXY
 
-          return `<span style="color:${ assetBalance.asset.color }"><strong>{name}: </strong></span> {y}`
-        })(),
-        name: assetBalance.asset.symbol,
-        dataPoints: porfolioTicks.filter((porfolioTick) => {
-          return !!porfolioTick.assetBalances[i].value
-        }).map((porfolioTick) => ({
-          x: porfolioTick.datetime,
-          y: porfolioTick.assetBalances[i].value,
-        }))
+    const data = [
+      {
+        yValueFormatString: "#,### Units",
+        xValueFormatString: "YYYY",
+        type: "spline",
+        dataPoints,
       }
-    })
+    ]
 
     const chart = new CanvasJS.Chart(this.canvas.current, {
       animationEnabled: true,
@@ -100,6 +86,7 @@ export default class BacktestDashboard extends React.Component<any, void> {
       },
       data,
     });
+    
     chart.render();
 
     const mouseWheelHandler = function (e:any) {
