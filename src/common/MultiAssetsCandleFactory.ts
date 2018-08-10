@@ -28,6 +28,10 @@ export class MultiAssetsCandleFactory {
 
     while (true) {
       const [timestamp, candlesSet] = this.takeCandlesSet(this.candlesOfAssets, candleIndicesByAssets)
+      if (this.isEmpty(candlesSet)) {
+        break
+      }
+
       const candle = MultiAssetsCandle.fromCandlesSet(timestamp, this.assetSymbols, candlesSet)
       candles.push(candle)
     }
@@ -35,35 +39,60 @@ export class MultiAssetsCandleFactory {
     return candles
   }
 
-  takeCandlesSet(candlesOfAssets: CandleChartResult[][], candleIndicesByAssets: Map<AssetSymbol, number>): [number, CandleChartResult[]] {
-    const candles: CandleChartResult[] = []
+  takeCandlesSet(candlesOfAssets: CandleChartResult[][], candleIndicesByAssets: Map<AssetSymbol, number>): [number, Map<AssetSymbol, CandleChartResult | undefined>] {
+    const candles: Map<AssetSymbol, CandleChartResult> = new Map()
     for (let assetIndex = 0; assetIndex < this.assets.length; assetIndex++) {
-      const assetSymbol = this.assets[0].symbol
+      const assetSymbol = this.assets[assetIndex].symbol
       const candleIndex = candleIndicesByAssets.get(assetSymbol)
 
       const candle = candlesOfAssets[assetIndex][candleIndex]
-      candles.push(candle)
+      candles.set(assetSymbol, candle)
     }
 
-    const oldestCandle = this.oldestCandle(candles)
+    if (this.isEmpty(candles)) {
+      return [0, candles]
+    }
+
+    const oldestCandle = this.oldestCandle(Array.from(candles.values()))
     const timestamp = oldestCandle.openTime
 
-    const sameTimestampCandles: CandleChartResult[] = []
-
-    for (let i = 0; i < candles.length; i++) {
-      const candle = candles[i]
-      if (candle.openTime !== timestamp) {
-        sameTimestampCandles[i] = undefined
-      } else {
-        sameTimestampCandles[i] = candle
+    const sameTimestampCandles: Map<AssetSymbol, CandleChartResult> = new Map()
+    
+    candles.forEach((candle, symbol) => {
+      if (!candle) {
+        sameTimestampCandles.set(symbol, undefined)
+        return
       }
-    }
+
+      if (candle.openTime === timestamp) {
+        sameTimestampCandles.set(symbol, candle)
+        candleIndicesByAssets.set(symbol, candleIndicesByAssets.get(symbol) + 1)
+      } else {
+        sameTimestampCandles.set(symbol, undefined)
+      }
+    })
 
     return [timestamp, sameTimestampCandles]
   }
 
   oldestCandle(candles: CandleChartResult[]): CandleChartResult {
-    const candle = _.minBy(candles, (candle) => candle.openTime)
+    const candle = _.minBy(candles, (candle) => {
+      if (!candle) {
+        return Number.MAX_SAFE_INTEGER
+      }
+
+      return candle.openTime
+    })
     return candle
+  }
+
+  isEmpty(candles: Map<AssetSymbol, CandleChartResult | undefined>) {
+    for (const candle of candles.values()) {
+      if (typeof candle !== 'undefined') {
+        return false
+      }
+    }
+
+    return true
   }
 }

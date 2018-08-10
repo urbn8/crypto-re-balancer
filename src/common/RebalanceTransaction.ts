@@ -30,6 +30,11 @@ export class RebalanceTransaction {
     const amountsByAssets: Map<AssetSymbol, Big> = new Map()
 
     this.exchangeRatesByAssets.forEach((exchangeRate, symbol) => {
+      if (exchangeRate.eq(0)) {
+        amountsByAssets.set(symbol, new Big(0))
+        return
+      }
+
       const baseBalance = eachAssetQuoteBalance.div(exchangeRate)
       amountsByAssets.set(symbol, baseBalance)
     })

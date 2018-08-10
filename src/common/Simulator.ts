@@ -80,11 +80,11 @@ export class Simulator {
 
   get porfolioBalance(): PorfolioBalance {
     if (!this.latestTransaction) {
-      console.log('this.initialPorfolioBalance', this.initialPorfolioBalance)
+      // console.log('this.initialPorfolioBalance', this.initialPorfolioBalance)
       return this.initialPorfolioBalance
     }
 
-    console.log('this.latestTransaction.rebalanced', this.latestTransaction.rebalanced)
+    // console.log('this.latestTransaction.rebalanced', this.latestTransaction.rebalanced)
     return this.latestTransaction.rebalanced
     // if (this.transactions.length === 0) {
     //   return this.initialPorfolioBalance
