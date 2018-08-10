@@ -17,12 +17,12 @@ export class BacktestResult {
     public porfolioCandles: PorfolioCandle[],
   ) {}
 
-  get porfolioBalanceHistoryXY(): {x: number, y: number}[] {
-    const history: {x: number, y: number}[] = []
-
+  get porfolioBalanceHistoryXY(): {x: Date, y: number}[] {
+    const history: {x: Date, y: number}[] = []
+    console.log('this.porfolioCandles.length', this.porfolioCandles.length)
     this.porfolioCandles.forEach((candle) => {
       history.push({
-        x: candle.timestamp,
+        x: new Date(candle.timestamp),
         y: Number(candle.totalQuoteBalance)
       })
     })
@@ -70,7 +70,8 @@ export class BacktestResult {
 export class Simulator {
   private totalFeeCosts = 0
   private totalTradedVolume = 0
-  private transactions: RebalanceTransaction[] = []
+  // private transactions: RebalanceTransaction[] = []
+  private latestTransaction: RebalanceTransaction
 
   constructor(
     private initialPorfolioBalance: PorfolioBalance,
@@ -78,11 +79,18 @@ export class Simulator {
   ) {}
 
   get porfolioBalance(): PorfolioBalance {
-    if (this.transactions.length === 0) {
+    if (!this.latestTransaction) {
+      console.log('this.initialPorfolioBalance', this.initialPorfolioBalance)
       return this.initialPorfolioBalance
     }
 
-    return this.transactions[this.transactions.length - 1].rebalanced
+    console.log('this.latestTransaction.rebalanced', this.latestTransaction.rebalanced)
+    return this.latestTransaction.rebalanced
+    // if (this.transactions.length === 0) {
+    //   return this.initialPorfolioBalance
+    // }
+
+    // return this.transactions[this.transactions.length - 1].rebalanced
   }
 
   async backtest(chandelier: Chandelier): Promise<BacktestResult> {
@@ -97,6 +105,7 @@ export class Simulator {
 
   porfolioCandles(chandelier: Chandelier): PorfolioCandle[] {
     const porfolioCandles: PorfolioCandle[] = []
+    console.log('chandelier.candles.length', chandelier.candles.length)
     for (const candle of chandelier.candles) {
       const advice = this.advisor.update(candle)
       if (advice.action === 'rebalance') {
@@ -111,17 +120,29 @@ export class Simulator {
   }
 
   rebalance(candle: MultiAssetsCandle) {
-    if (this.transactions.length === 0) {
-      this.transactions.push(new RebalanceTransaction(
+    if (!this.latestTransaction) {
+      this.latestTransaction = new RebalanceTransaction(
         this.initialPorfolioBalance,
         candle.exchangeRate,
-      ))
+      )
       return
     }
 
-    this.transactions.push(new RebalanceTransaction(
-      this.transactions[this.transactions.length - 1].rebalanced,
+    this.latestTransaction = new RebalanceTransaction(
+      this.latestTransaction.rebalanced,
       candle.exchangeRate,
-    ))
+    )
+    // if (this.transactions.length === 0) {
+    //   this.transactions.push(new RebalanceTransaction(
+    //     this.initialPorfolioBalance,
+    //     candle.exchangeRate,
+    //   ))
+    //   return
+    // }
+
+    // this.transactions.push(new RebalanceTransaction(
+    //   this.transactions[this.transactions.length - 1].rebalanced,
+    //   candle.exchangeRate,
+    // ))
   }
 }

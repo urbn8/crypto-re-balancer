@@ -20,6 +20,20 @@ export class RebalanceTransaction {
   }
 
   get rebalanced(): PorfolioBalance {
-    return null
+    let totalQuoteBalance = new Big(0)
+    this.exchangeRatesByAssets.forEach((exchangeRate, symbol) => {
+      totalQuoteBalance = totalQuoteBalance.add(this.initialPorfolioBalance.quote(symbol, exchangeRate))
+    })
+
+    const eachAssetQuoteBalance = totalQuoteBalance.div(this.initialPorfolioBalance.size)
+
+    const amountsByAssets: Map<AssetSymbol, Big> = new Map()
+
+    this.exchangeRatesByAssets.forEach((exchangeRate, symbol) => {
+      const baseBalance = eachAssetQuoteBalance.div(exchangeRate)
+      amountsByAssets.set(symbol, baseBalance)
+    })
+
+    return new PorfolioBalance(amountsByAssets)
   }
 }

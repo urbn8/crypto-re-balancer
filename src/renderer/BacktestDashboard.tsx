@@ -59,7 +59,7 @@ export default class BacktestDashboard extends React.Component<any, void> {
     const backtestResult = await backtest.backtest(new Chandelier(assets, candleRepo))
 
     const dataPoints = backtestResult.porfolioBalanceHistoryXY
-
+    console.log('dataPoints', dataPoints)
     const data = [
       {
         yValueFormatString: "#,### Units",
@@ -91,7 +91,6 @@ export default class BacktestDashboard extends React.Component<any, void> {
 
     const mouseWheelHandler = function (e:any) {
       let dir : number = (e.wheelDelta || -e.detail) > 0 ? -1 : +1;
-      console.log(chart)
       let b = chart._axes.find((a: any) => {return a.type == 'axisX'});
       let delta : number = dir * (b.viewportMaximum - b.viewportMinimum) / 10;
       b.sessionVariables.newViewportMinimum = b.viewportMinimum - delta * (e.clientX / chart.width);

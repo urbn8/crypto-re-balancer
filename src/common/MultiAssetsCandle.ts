@@ -11,6 +11,10 @@ export class MultiAssetsCandle {
   get exchangeRate(): Map<AssetSymbol, Big> {
     const data: Map<AssetSymbol, Big> = new Map()
     this.data.forEach((candle, assetSymbol) => {
+      if (!candle) {
+        console.error('!candle: this.data: ', assetSymbol, this.data)
+      }
+
       data.set(assetSymbol, new Big(candle.close))
     })
 
