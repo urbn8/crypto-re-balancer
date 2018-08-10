@@ -19,7 +19,6 @@ export class BacktestResult {
 
   get porfolioBalanceHistoryXY(): {x: Date, y: number}[] {
     const history: {x: Date, y: number}[] = []
-    console.log('this.porfolioCandles.length', this.porfolioCandles.length)
     this.porfolioCandles.forEach((candle) => {
       history.push({
         x: new Date(candle.timestamp),
@@ -80,11 +79,9 @@ export class Simulator {
 
   get porfolioBalance(): PorfolioBalance {
     if (!this.latestTransaction) {
-      // console.log('this.initialPorfolioBalance', this.initialPorfolioBalance)
       return this.initialPorfolioBalance
     }
 
-    // console.log('this.latestTransaction.rebalanced', this.latestTransaction.rebalanced)
     return this.latestTransaction.rebalanced
     // if (this.transactions.length === 0) {
     //   return this.initialPorfolioBalance

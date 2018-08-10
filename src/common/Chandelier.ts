@@ -15,7 +15,7 @@ export class Chandelier {
   }
 
   async load() {
-    const fromTime = moment().add(-24, 'hour')
+    const fromTime = moment().add(-1, 'year')
     const candlesOfAssets = await Promise.all(this.assets.map(async (asset) => {
       const candles = await this.candleRepo.findAllSince(asset.symbol, '1h', fromTime.toDate())
       return candles
