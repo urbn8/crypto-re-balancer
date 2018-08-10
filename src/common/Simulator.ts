@@ -6,6 +6,7 @@ import { PorfolioCandle } from "./PorfolioCandle";
 import { RebalanceTransaction } from "./RebalanceTransaction";
 import { AssetSymbol, Asset } from "./Asset";
 import { Big } from "big.js";
+import { CandleChartResult } from "binance-api-node";
 
 
 // roundtrips, transaction
@@ -13,6 +14,7 @@ import { Big } from "big.js";
 export class BacktestResult {
   constructor(
     public assets: Asset[],
+    public candlesByAssets: Map<AssetSymbol, CandleChartResult[]>,
     public ohlcCandles: MultiAssetsCandle[],
     public porfolioCandles: PorfolioCandle[],
   ) {}
@@ -95,6 +97,7 @@ export class Simulator {
     const porfolioCandles = this.porfolioCandles(chandelier)
     return new BacktestResult(
       chandelier.assets,
+      chandelier.candlesByAssets,
       multiAssetsCandle,
       porfolioCandles,
     )

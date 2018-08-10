@@ -7,14 +7,21 @@ import * as Color from 'color'
 import CandleMgoRepo from '../common/CandleMgoRepo'
 import backtest from "../common/backtest";
 import { Chandelier } from '../common/Chandelier';
-import { Asset } from '../common/Asset';
+import { Asset, AssetSymbol } from '../common/Asset';
+
+import CandleStickChart from './CandleStickChart'
+import { CandleChartResult } from 'binance-api-node';
 
 declare var __static: string
 declare var CanvasJS: any
 
 const candleRepo = new CandleMgoRepo()
 
-export default class BacktestDashboard extends React.Component<any, void> {
+interface IState {
+  candlesByAssets: Map<AssetSymbol, CandleChartResult[]>
+}
+
+export default class BacktestDashboard extends React.Component<any, IState> {
 
   // private canvas: React.RefObject<HTMLCanvasElement>
   private canvas: React.RefObject<HTMLDivElement>
@@ -22,6 +29,10 @@ export default class BacktestDashboard extends React.Component<any, void> {
   constructor(props) {
     super(props);
     this.canvas = React.createRef();
+
+    this.state = {
+      candlesByAssets: undefined
+    }
   }
 
   async componentDidMount() {
@@ -57,6 +68,10 @@ export default class BacktestDashboard extends React.Component<any, void> {
     ]
 
     const backtestResult = await backtest.backtest(new Chandelier(assets, candleRepo))
+
+    this.setState({
+      candlesByAssets: backtestResult.candlesByAssets,
+    })
 
     const dataPoints = backtestResult.porfolioBalanceHistoryXY
     console.log('dataPoints', dataPoints)
@@ -103,7 +118,14 @@ export default class BacktestDashboard extends React.Component<any, void> {
 
 	render() {
     return (
-      <div ref={this.canvas} style={{height: '100%'}}></div>
+      <div style={{height: '100%'}}>
+        <div ref={this.canvas} style={{height: '50%'}}></div>
+        {
+          this.state.candlesByAssets ? (
+            <CandleStickChart data={ this.state.candlesByAssets.get('BTCUSDT') } />
+          ) : undefined
+        }
+      </div>
     )
   }
 }
