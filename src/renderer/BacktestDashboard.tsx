@@ -67,7 +67,7 @@ export default class BacktestDashboard extends React.Component<any, IState> {
       },
     ]
 
-    const backtestResult = await backtest.backtest(new Chandelier(assets, candleRepo))
+    const backtestResult = await backtest().backtest(new Chandelier(assets, candleRepo))
 
     this.setState({
       candlesByAssets: backtestResult.candlesByAssets,
@@ -126,13 +126,13 @@ export default class BacktestDashboard extends React.Component<any, IState> {
       <div style={{height: '100%'}}>
         <div ref={this.canvas} style={{height: '50%'}}></div>
         {
-          this.state.candlesByAssets ? (
-            <div>
-              <CandleStickChart data={ this.state.candlesByAssets.get('BTCUSDT') } />
-              <CandleStickChart data={ this.state.candlesByAssets.get('ETHUSDT') } />
-              <CandleStickChart data={ this.state.candlesByAssets.get('BNBUSDT') } />
-            </div>
-          ) : undefined
+          // this.state.candlesByAssets ? (
+          //   <div>
+          //     <CandleStickChart data={ this.state.candlesByAssets.get('BTCUSDT') } />
+          //     <CandleStickChart data={ this.state.candlesByAssets.get('ETHUSDT') } />
+          //     <CandleStickChart data={ this.state.candlesByAssets.get('BNBUSDT') } />
+          //   </div>
+          // ) : undefined
         }
       </div>
     )

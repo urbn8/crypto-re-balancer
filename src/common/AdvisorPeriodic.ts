@@ -26,7 +26,7 @@ export class AdvisorPeriodic implements IAdvisor {
       return this.rebalance(candle.timestamp)
     }
     
-    if (candle.timestamp < this.lastRebalance + this.rebalanceInterval) {
+    if (this.lastRebalance + this.rebalanceInterval <= candle.timestamp) {
       return this.rebalance(candle.timestamp)
     }
 

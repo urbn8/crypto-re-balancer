@@ -5,7 +5,7 @@ import { oneDayInMilliseconds } from "./intervalPresets";
 import { PorfolioBalance } from "./PorfolioBalance";
 import { Simulator } from "./Simulator";
 
-export default new Simulator(
+export default () => new Simulator(
   new PorfolioBalance(
     new Map<AssetSymbol, Big>([
       ['BTCUSDT', new Big(1)],

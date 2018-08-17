@@ -73,6 +73,7 @@ export class Simulator {
   private totalTradedVolume = 0
   // private transactions: RebalanceTransaction[] = []
   private latestTransaction: RebalanceTransaction
+  private transactionsCount = 0
 
   constructor(
     private initialPorfolioBalance: PorfolioBalance,
@@ -95,6 +96,9 @@ export class Simulator {
   async backtest(chandelier: Chandelier): Promise<BacktestResult> {
     const multiAssetsCandle = await chandelier.load()
     const porfolioCandles = this.porfolioCandles(chandelier)
+
+    console.log('transactionsCount', this.transactionsCount)
+
     return new BacktestResult(
       chandelier.assets,
       chandelier.candlesByAssets,
@@ -122,6 +126,8 @@ export class Simulator {
   }
 
   rebalance(candle: MultiAssetsCandle) {
+    this.transactionsCount = this.transactionsCount + 1
+
     if (!this.latestTransaction) {
       this.latestTransaction = new RebalanceTransaction(
         this.initialPorfolioBalance,
