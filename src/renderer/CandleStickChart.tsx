@@ -182,8 +182,8 @@ class CandleStickChart extends React.Component<any, any> {
 						orient="left"
 						displayFormat={format(".4s")} />
 
-					<BarSeries yAccessor={d => d.volume} fill={d => d.close > d.open ? "#6BA583" : "red"} />
-					<AreaSeries yAccessor={smaVolume50.accessor()} stroke={smaVolume50.stroke()} fill={smaVolume50.fill()}/>
+					{/* <BarSeries yAccessor={d => d.volume} fill={d => d.close > d.open ? "#6BA583" : "red"} />
+					<AreaSeries yAccessor={smaVolume50.accessor()} stroke={smaVolume50.stroke()} fill={smaVolume50.fill()}/> */}
 					<CurrentCoordinate yAccessor={smaVolume50.accessor()} fill={smaVolume50.stroke()} />
 					<CurrentCoordinate yAccessor={d => d.volume} fill="#9B0A47" />
 				</Chart>

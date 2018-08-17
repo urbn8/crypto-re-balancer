@@ -64,6 +64,19 @@ export default class CandleMgoRepo implements CandleRepo {
     return data
   }
 
+  async findInRange(symbol: string, interval: CandleChartInterval, since: Date, to: Date): Promise<CandleChartResult[]> {
+    const db = await this.connect()
+    const col = db.collection(this.collection(symbol, interval))
+
+    const data = await col.find<CandleChartResult>({
+      openTime: {
+        $gte: since.getTime(),
+        $lte: to.getTime(),
+      }
+    }).toArray()
+    return data
+  }
+
   async findOneByOpenTime(symbol: string, interval: CandleChartInterval, openTime: Date): Promise<CandleChartResult> {
     const db = await this.connect()
     const col = db.collection(this.collection(symbol, interval))

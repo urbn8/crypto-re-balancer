@@ -117,12 +117,21 @@ export default class BacktestDashboard extends React.Component<any, IState> {
   }
 
 	render() {
+    if (this.state.candlesByAssets) {
+      // console.log("this.state.candlesByAssets.get('BTCUSDT')", this.state.candlesByAssets.get('BTCUSDT'))
+      // console.log("this.state.candlesByAssets.get('ETHUSDT')", this.state.candlesByAssets.get('ETHUSDT'))
+      // console.log("this.state.candlesByAssets.get('BNBUSDT')", this.state.candlesByAssets.get('BNBUSDT'))
+    }
     return (
       <div style={{height: '100%'}}>
         <div ref={this.canvas} style={{height: '50%'}}></div>
         {
           this.state.candlesByAssets ? (
-            <CandleStickChart data={ this.state.candlesByAssets.get('BTCUSDT') } />
+            <div>
+              <CandleStickChart data={ this.state.candlesByAssets.get('BTCUSDT') } />
+              <CandleStickChart data={ this.state.candlesByAssets.get('ETHUSDT') } />
+              <CandleStickChart data={ this.state.candlesByAssets.get('BNBUSDT') } />
+            </div>
           ) : undefined
         }
       </div>

@@ -1,4 +1,5 @@
 import { Big } from "big.js";
+import * as _ from 'lodash'
 import { AssetSymbol } from "./Asset";
 
 // roundtrips, transaction
@@ -17,5 +18,12 @@ export class PorfolioBalance {
       return undefined;
     }
     return baseAmount.times(exchangeRate);
+  }
+
+  toJSON() {
+    const { amountsByAssets } = this
+    return {
+      amountsByAssets: Array.from(amountsByAssets.keys()).map((k) => ({[k]: amountsByAssets.get(k).toString()}))
+    }
   }
 }

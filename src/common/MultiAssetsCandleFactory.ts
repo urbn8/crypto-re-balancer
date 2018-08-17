@@ -26,14 +26,19 @@ export class MultiAssetsCandleFactory {
       candleIndicesByAssets.set(asset.symbol, 0)
     }
 
+    let prevTimestamp: number = null
+
     while (true) {
       const [timestamp, candlesSet] = this.takeCandlesSet(this.candlesOfAssets, candleIndicesByAssets)
       if (this.isEmpty(candlesSet)) {
+        console.log('MultiAssetsCandleFactory finished at timestamp: ', new Date(prevTimestamp))
         break
       }
 
       const candle = MultiAssetsCandle.fromCandlesSet(timestamp, this.assetSymbols, candlesSet)
       candles.push(candle)
+
+      prevTimestamp = timestamp
     }
 
     return candles

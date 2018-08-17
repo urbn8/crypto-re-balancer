@@ -107,6 +107,7 @@ export class Simulator {
     const porfolioCandles: PorfolioCandle[] = []
     console.log('chandelier.candles.length', chandelier.candles.length)
     for (const candle of chandelier.candles) {
+      // console.log('candle', JSON.stringify(candle))
       const advice = this.advisor.update(candle)
       if (advice.action === 'rebalance') {
         this.rebalance(candle)
@@ -116,6 +117,7 @@ export class Simulator {
       porfolioCandles.push(porfolioCandle)
     }
 
+    // console.log('porfolioCandles', JSON.stringify(porfolioCandles))
     return porfolioCandles
   }
 

@@ -10,7 +10,7 @@ import { resolve } from 'url';
 
 const RELATIVE_PATH = app.getPath("userData");
 
-export default class CandleNedbRepo implements CandleRepo {
+export default class CandleNedbRepo {
   private collection(symbol: string, interval: CandleChartInterval): Promise<Datastore> {
     return new Promise((resolve, reject) => {
       const db = new Datastore({ filename: path.join(RELATIVE_PATH, `candles_BINA_${symbol}_${ interval }.db`) })

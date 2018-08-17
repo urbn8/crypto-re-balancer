@@ -5,7 +5,7 @@ import { Big } from "big.js";
 export class MultiAssetsCandle {
   constructor(
     public timestamp: number,
-    public data: Map<AssetSymbol, CandleChartResult>,
+    public data: Map<AssetSymbol, CandleChartResult | undefined>,
   ) {}
 
   get exchangeRate(): Map<AssetSymbol, Big> {
@@ -22,9 +22,18 @@ export class MultiAssetsCandle {
     return data
   }
 
+  toJSON() {
+    const { timestamp, data } = this
+    return {
+      timestamp,
+      datetime: new Date(timestamp),
+      data: Array.from(data.keys()).map((k) => ({[k]: data.get(k)}))
+    }
+  }
+
   static fromCandlesSet(timestamp: number, assetSymbols: AssetSymbol[], candlesSet: Map<AssetSymbol, CandleChartResult | undefined>): MultiAssetsCandle {
     if (assetSymbols.length !== candlesSet.size) {
-      console.error('assetSymbols', assetSymbols, 'candlesSet', candlesSet)
+      // console.error('assetSymbols', assetSymbols, 'candlesSet', candlesSet)
       throw new Error('assetSymbols.length !== candlesSet.length')
     }
 

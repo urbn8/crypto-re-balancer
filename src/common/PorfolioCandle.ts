@@ -1,4 +1,5 @@
 import { Big } from "big.js";
+import * as _ from 'lodash'
 import { AssetSymbol } from "./Asset";
 import { PorfolioBalance } from "./PorfolioBalance";
 
@@ -27,5 +28,15 @@ export class PorfolioCandle {
     })
 
     return total
+  }
+
+  toJSON() {
+    const { timestamp, porfolioBalance, exchangeRatesByAssets } = this
+    return {
+      timestamp,
+      datetime: new Date(timestamp),
+      porfolioBalance: porfolioBalance.toJSON(),
+      exchangeRatesByAssets: Array.from(exchangeRatesByAssets.keys()).map((k) => ({[k]: exchangeRatesByAssets.get(k).toString()}))
+    }
   }
 }
