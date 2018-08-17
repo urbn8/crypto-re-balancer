@@ -11,6 +11,8 @@ import { Asset, AssetSymbol } from '../common/Asset';
 
 import CandleStickChart from './CandleStickChart'
 import { CandleChartResult } from 'binance-api-node';
+import { AdvisorPeriodic } from '../common/AdvisorPeriodic';
+import { oneDayInMilliseconds } from '../common/intervalPresets';
 
 declare var __static: string
 declare var CanvasJS: any
@@ -67,7 +69,8 @@ export default class BacktestDashboard extends React.Component<any, IState> {
       },
     ]
 
-    const backtestResult = await backtest().backtest(new Chandelier(assets, candleRepo))
+
+    const backtestResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(oneDayInMilliseconds, 0))
 
     this.setState({
       candlesByAssets: backtestResult.candlesByAssets,

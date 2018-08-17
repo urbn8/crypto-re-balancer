@@ -13,5 +13,4 @@ export default () => new Simulator(
       ['BNBUSDT', new Big(300)],
     ])
   ),
-  new AdvisorPeriodic(oneDayInMilliseconds, 0),
 )

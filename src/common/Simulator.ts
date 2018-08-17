@@ -77,7 +77,6 @@ export class Simulator {
 
   constructor(
     private initialPorfolioBalance: PorfolioBalance,
-    private advisor: IAdvisor,
   ) {}
 
   get porfolioBalance(): PorfolioBalance {
@@ -93,9 +92,9 @@ export class Simulator {
     // return this.transactions[this.transactions.length - 1].rebalanced
   }
 
-  async backtest(chandelier: Chandelier): Promise<BacktestResult> {
+  async backtest(chandelier: Chandelier, advisor: IAdvisor): Promise<BacktestResult> {
     const multiAssetsCandle = await chandelier.load()
-    const porfolioCandles = this.porfolioCandles(chandelier)
+    const porfolioCandles = this.porfolioCandles(chandelier, advisor)
 
     console.log('transactionsCount', this.transactionsCount)
 
@@ -107,12 +106,12 @@ export class Simulator {
     )
   }
 
-  porfolioCandles(chandelier: Chandelier): PorfolioCandle[] {
+  porfolioCandles(chandelier: Chandelier, advisor: IAdvisor): PorfolioCandle[] {
     const porfolioCandles: PorfolioCandle[] = []
     console.log('chandelier.candles.length', chandelier.candles.length)
     for (const candle of chandelier.candles) {
       // console.log('candle', JSON.stringify(candle))
-      const advice = this.advisor.update(candle)
+      const advice = advisor.update(candle)
       if (advice.action === 'rebalance') {
         this.rebalance(candle)
       }
