@@ -13,6 +13,7 @@
     "fetch": "ts-node ./src/fetcher.ts"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "big.js": "^5.1.2",
     "binance-api-node": "^0.8.2",
     "bluebird": "^3.5.1",

@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import * as React from "react";
 import { Chart } from 'chart.js'
 import * as Color from 'color'
+import axios from 'axios'
 
 import CandleMgoRepo from '../common/CandleMgoRepo'
 import backtest from "../common/backtest";
@@ -70,27 +71,37 @@ export default class BacktestDashboard extends React.Component<any, IState> {
     ]
 
 
-    const balanceOnceADayResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(oneDayInMilliseconds, 0))
-    const noBalanceResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(0, 0))
+    // const balanceOnceADayResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(oneDayInMilliseconds, 0))
+    // const noBalanceResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(0, 0))
 
     // this.setState({
     //   candlesByAssets: balanceOnceADayResult.candlesByAssets,
     // })
 
-    const dataPoints = balanceOnceADayResult.porfolioBalanceHistoryXY
+    // const dataPoints = balanceOnceADayResult.porfolioBalanceHistoryXY
     // console.log('dataPoints', dataPoints)
+
+    const resp = await axios.get('http://localhost:8080/backtest/smooth')
+    console.log('resp.data.default.length', resp.data.default[0], resp.data.balanced[0])
     const data = [
       {
         yValueFormatString: "$#,###",
         xValueFormatString: "YYYY",
         type: "spline",
-        dataPoints,
+        dataPoints: resp.data.default.map((xy) => ({
+          x: new Date(xy.x),
+          y: xy.y
+        })),
       },
       {
         yValueFormatString: "$#,###",
         xValueFormatString: "YYYY",
         type: "spline",
-        dataPoints: noBalanceResult.porfolioBalanceHistoryXY,
+        dataPoints: resp.data.balanced.map((xy) => ({
+          x: new Date(xy.x),
+          y: xy.y
+        })),
+        // dataPoints: noBalanceResult.porfolioBalanceHistoryXY,
       }
     ]
 
