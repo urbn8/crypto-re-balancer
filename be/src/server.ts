@@ -30,6 +30,7 @@ class HttpServer {
         //configure routes
         this.IndexRoutes();
         this.UsersRoutes();
+        this.BacktestRoutes();
     }
     private ExpressConfiguration() {
         this.app.use(bodyParser.urlencoded({ extended: true }));
@@ -78,8 +79,8 @@ class HttpServer {
     private BacktestRoutes() {
         this.router = express.Router();
         const backtest: backtestRouter.Backtest = new backtestRouter.Backtest();
-        this.router.get("/all", backtest.all.bind(backtest.all));
-        this.app.use("/api/users", this.router);
+        this.router.get("", backtest.index.bind(backtest.index));
+        this.app.use("/backtest", this.router);
     }
 }
 

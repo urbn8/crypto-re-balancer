@@ -1,19 +1,19 @@
 "use strict";
 import * as express from "express";
 
-import CandleMgoRepo from '../../../common/CandleMgoRepo'
-import backtest from "../../../common/backtest";
-import { Chandelier } from '../../../common/Chandelier';
-import { Asset } from "../../../common/Asset";
-import { AdvisorPeriodic } from "../../../common/AdvisorPeriodic";
-import { oneDayInMilliseconds } from "../../../common/intervalPresets";
+import CandleMgoRepo from '../common/CandleMgoRepo'
+import backtest from "../common/backtest";
+import { Chandelier } from '../common/Chandelier';
+import { Asset } from "../common/Asset";
+import { AdvisorPeriodic } from "../common/AdvisorPeriodic";
+import { oneDayInMilliseconds } from "../common/intervalPresets";
 
 const candleRepo = new CandleMgoRepo()
 
 module Route {
  export class Backtest {
 
-   async all(req: express.Request, res: express.Response, next: express.NextFunction) {
+   async index(req: express.Request, res: express.Response, next: express.NextFunction) {
     const assets: Asset[] = [
       {
         symbol: 'BTCUSDT',
