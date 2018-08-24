@@ -1,5 +1,4 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 
 import { scaleTime } from "d3-scale";
 import { curveMonotoneX } from "d3-shape";

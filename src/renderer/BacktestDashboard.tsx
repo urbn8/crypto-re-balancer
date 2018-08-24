@@ -70,20 +70,27 @@ export default class BacktestDashboard extends React.Component<any, IState> {
     ]
 
 
-    const backtestResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(oneDayInMilliseconds, 0))
+    const balanceOnceADayResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(oneDayInMilliseconds, 0))
+    const noBalanceResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(0, 0))
 
-    this.setState({
-      candlesByAssets: backtestResult.candlesByAssets,
-    })
+    // this.setState({
+    //   candlesByAssets: balanceOnceADayResult.candlesByAssets,
+    // })
 
-    const dataPoints = backtestResult.porfolioBalanceHistoryXY
-    console.log('dataPoints', dataPoints)
+    const dataPoints = balanceOnceADayResult.porfolioBalanceHistoryXY
+    // console.log('dataPoints', dataPoints)
     const data = [
       {
-        yValueFormatString: "#,### Units",
+        yValueFormatString: "$#,###",
         xValueFormatString: "YYYY",
         type: "spline",
         dataPoints,
+      },
+      {
+        yValueFormatString: "$#,###",
+        xValueFormatString: "YYYY",
+        type: "spline",
+        dataPoints: noBalanceResult.porfolioBalanceHistoryXY,
       }
     ]
 
@@ -94,6 +101,7 @@ export default class BacktestDashboard extends React.Component<any, IState> {
         text: "Lobster 1 Year Backtest"
       },
       axisY :{
+        includeZero: false,
         valueFormatString: "#0,.",
         suffix: "k"
       },

@@ -23,9 +23,12 @@ export class Chandelier {
     // const fromTime = moment('2018-02-09')
     // const toTime = moment('2018-02-10')
     // const fromTime = moment('2018-08-10')
-    const fromTime = moment('Fri Aug 10 2018 09:31:00 GMT+0700 (+07)')
+    // const fromTime = moment('Fri May 01 2018 09:31:00 GMT+0700 (+07)')
+    const fromTime = moment('Fri July 23 2018 09:31:00 GMT+0700 (+07)')
+    const toTime = moment('Fri Aug 22 2018 09:31:00 GMT+0700 (+07)')
     let candlesOfAssets = await Promise.all(this.assets.map(async (asset) => {
-      const candles = await this.candleRepo.findAllSince(asset.symbol, '1m', fromTime.toDate())
+      // const candles = await this.candleRepo.findAllSince(asset.symbol, '1m', fromTime.toDate())
+      const candles = await this.candleRepo.findInRange(asset.symbol, '1m', fromTime.toDate(), toTime.toDate())
       // const candles = await this.candleRepo.findInRange(asset.symbol, '1h', fromTime.toDate(), toTime.toDate())
       // console.log('candles.length', asset.symbol, candles.length, JSON.stringify(candles))
       return candles
@@ -34,7 +37,7 @@ export class Chandelier {
 
     // TODO: trim candles at the end to make sure they all finished at the same time interval?
 
-    this.analyzeCandlesOfAssets(candlesOfAssets)
+    // this.analyzeCandlesOfAssets(candlesOfAssets)
 
     this.candlesByAssets = new Map()
     this.assets.map((asset, i) => {

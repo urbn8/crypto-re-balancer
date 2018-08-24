@@ -23,7 +23,8 @@ export default class HistoricalPriceDataFetcher {
 
   public async executeSymbol(symbol: string, interval: CandleChartInterval) {
     const limit = 500
-    let tsLast = 1483243199000
+    // let tsLast = 1483243199000
+    let tsLast = 1538366399000
 
     while (true) {
       console.log('tsLast', tsLast)

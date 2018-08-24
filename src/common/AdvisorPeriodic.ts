@@ -16,6 +16,12 @@ export class AdvisorPeriodic implements IAdvisor {
       this.firstCandle = candle
     }
 
+    if (this.rebalanceInterval === 0) {
+      return {
+        action: 'hold'
+      }
+    }
+
     if (candle.timestamp < (this.firstCandle.timestamp + this.kickoffDelay)) {
       return {
         action: 'hold'

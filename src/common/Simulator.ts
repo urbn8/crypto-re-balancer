@@ -4,69 +4,8 @@ import { MultiAssetsCandle } from "./MultiAssetsCandle";
 import { PorfolioBalance } from "./PorfolioBalance";
 import { PorfolioCandle } from "./PorfolioCandle";
 import { RebalanceTransaction } from "./RebalanceTransaction";
-import { AssetSymbol, Asset } from "./Asset";
-import { Big } from "big.js";
-import { CandleChartResult } from "binance-api-node";
+import { BacktestResult } from "./BacktestResult";
 
-
-// roundtrips, transaction
-
-export class BacktestResult {
-  constructor(
-    public assets: Asset[],
-    public candlesByAssets: Map<AssetSymbol, CandleChartResult[]>,
-    public ohlcCandles: MultiAssetsCandle[],
-    public porfolioCandles: PorfolioCandle[],
-  ) {}
-
-  get porfolioBalanceHistoryXY(): {x: Date, y: number}[] {
-    const history: {x: Date, y: number}[] = []
-    this.porfolioCandles.forEach((candle) => {
-      history.push({
-        x: new Date(candle.timestamp),
-        y: Number(candle.totalQuoteBalance)
-      })
-    })
-
-    return history
-  }
-
-  get assetsBalanceHistory(): Map<AssetSymbol, [number, Big][]> {
-    const m: Map<AssetSymbol, [number, Big][]> = new Map()
-    for (const asset of this.assets) {
-      m.set(asset.symbol, [])
-    }
-
-    this.porfolioCandles.forEach((candle) => {
-      const quoteBalancesByAssets = candle.quoteBalancesByAssets
-      for (const asset of this.assets) {
-        const quoteBalance = quoteBalancesByAssets.get(asset.symbol)
-        m.get(asset.symbol).push([candle.timestamp, quoteBalance])
-      }
-    })
-
-    return m
-  }
-
-  get assetsBalanceHistoryXY(): Map<AssetSymbol, {x: number, y: number}[]> {
-    const m: Map<AssetSymbol, {x: number, y: number}[]> = new Map()
-    for (const asset of this.assets) {
-      m.set(asset.symbol, [])
-    }
-
-    this.porfolioCandles.forEach((candle) => {
-      const quoteBalancesByAssets = candle.quoteBalancesByAssets
-      for (const asset of this.assets) {
-        const quoteBalance = quoteBalancesByAssets.get(asset.symbol)
-        m.get(asset.symbol).push({
-          x: candle.timestamp, y: Number(quoteBalance)
-        })
-      }
-    })
-
-    return m
-  }
-}
 
 export class Simulator {
   private totalFeeCosts = 0
