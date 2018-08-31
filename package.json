@@ -26,7 +26,6 @@
     "mongodb": "^3.1.1",
     "nedb": "^1.8.0",
     "nice-react-layout": "^0.6.7",
-    "office-ui-fabric-react": "^6.53.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-stockcharts": "^0.7.7",

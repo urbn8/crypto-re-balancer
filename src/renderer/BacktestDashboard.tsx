@@ -81,7 +81,7 @@ export default class BacktestDashboard extends React.Component<any, IState> {
     // const dataPoints = balanceOnceADayResult.porfolioBalanceHistoryXY
     // console.log('dataPoints', dataPoints)
 
-    const resp = await axios.get('http://localhost:8080/backtest/smooth')
+    const resp = await axios.get('http://localhost:8080/backtest?source=unsafesmooth_t')
     console.log('resp.data.default.length', resp.data.default[0], resp.data.balanced[0])
     const data = [
       {
