@@ -2,16 +2,13 @@ import * as React from "react";
 import { Button, Card, Elevation, H2, H4, Divider, Spinner } from "@blueprintjs/core"
 import { Symbol } from 'binance-api-node';
 import styled from 'styled-components'
+import Scrollbars from 'react-custom-scrollbars'
 
 import { Asset as IAsset } from "../../common/Asset";
 
 interface IProps {
   assets?: IAsset[]
 }
-
-const AssetsWrapper = styled.div`
-  overflow: hidden;
-`
 
 export default class AssetSelection extends React.Component<IProps, {}> {
   constructor(props) {
@@ -20,7 +17,9 @@ export default class AssetSelection extends React.Component<IProps, {}> {
 
 	render() {
     return (
-      <Card interactive={false} elevation={Elevation.TWO}>
+      <Card interactive={false} elevation={Elevation.TWO} style={{
+        height: '100%',
+      }}>
         <H2>Asset Selection</H2>
         <Divider />
         
@@ -28,13 +27,13 @@ export default class AssetSelection extends React.Component<IProps, {}> {
           !this.props.assets ? (
             <Spinner size={Spinner.SIZE_STANDARD} />
           ) :
-          <AssetsWrapper>
+          <Scrollbars>
             {
               this.props.assets.map((asset) => (
                 <Asset key={ asset.symbol } name={ asset.name } symbol={ asset.symbol } selected={ false }/>
               ))
             }
-          </AssetsWrapper>
+          </Scrollbars>
         }
 
         {

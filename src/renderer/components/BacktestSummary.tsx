@@ -57,7 +57,9 @@ export default class BacktestSummary extends React.Component<any, IState> {
     }
 
     return (
-      <Card interactive={false} elevation={Elevation.TWO}>
+      <Card interactive={false} elevation={Elevation.TWO} style={{
+        // height: '100%'
+      }}>
         <H2>Summary</H2>
         <Divider />
 

@@ -26,17 +26,15 @@ export default class BacktestDashboard extends React.Component<IProps, IState> {
 	render() {
     return (
       // <View>
-        <VerticalLayout mockup>
-          <HorizontalLayout mockup>
+        <VerticalLayout>
+          <HorizontalLayout>
             <Panel proportion={2}>Chart</Panel>
             <Panel proportion={1}>
               <BacktestSummary />
             </Panel>
           </HorizontalLayout>
           <HorizontalLayout>
-            <Panel customCss={{
-              overflow: 'auto',
-            }}>
+            <Panel>
               <AssetSelection assets={ this.props.assets }/>
             </Panel>
             <Panel fixed fixedWidth={280}>
