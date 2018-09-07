@@ -15,7 +15,7 @@ let render = () => {
     document.getElementById('app')
   )
 
-  document.getElementById('app').className = 'bp3-dark'
+  document.getElementsByTagName('body')[0].className = 'bp3-dark'
 }
 
 render();

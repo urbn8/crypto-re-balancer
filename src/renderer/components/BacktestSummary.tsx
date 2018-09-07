@@ -5,7 +5,7 @@ import { HorizontalLayout,
   Separator,
   Spacer,
   View } from "nice-react-layout"
-import { FormGroup, InputGroup, Card, Elevation, NumericInput, HTMLSelect, Dialog, Navbar, NavbarHeading, NavbarGroup, Alignment, Divider, H2, ButtonGroup, Button, HTMLTable } from "@blueprintjs/core";
+import { FormGroup, InputGroup, Card, Elevation, NumericInput, HTMLSelect, Dialog, Navbar, NavbarHeading, NavbarGroup, Alignment, Divider, H2, ButtonGroup, Button, HTMLTable, Tooltip, Position } from "@blueprintjs/core";
 import styled from 'styled-components'
 import { Asset } from "../../common/Asset";
 
@@ -78,7 +78,6 @@ interface IAssetsPropotionProps {
 const AssetsPropotionWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  /* flex-direction: column; */
 `
 
 class AssetsPropotion extends React.Component<IAssetsPropotionProps, {}> {
@@ -126,10 +125,12 @@ class AssetPropotion extends React.Component<IAssetPropotionProps, {}> {
 
 	render() {
     return (
-      <AssetPropotionWrapper>
-        <PropotionText className='bp3-text-large'>{ Math.round(this.props.data.ratio * 100 * 100) / 100 }%</PropotionText>
-        <AssetImg src={ `cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg` }/>
-      </AssetPropotionWrapper>
+      <Tooltip content={ <span className='bp3-text-small'>{ this.props.data.symbol }</span> } position={ Position.TOP }>
+        <AssetPropotionWrapper>
+            <PropotionText className='bp3-text-large'>{ Math.round(this.props.data.ratio * 100 * 100) / 100 }%</PropotionText>
+            <AssetImg src={ `cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg` }/>
+        </AssetPropotionWrapper>
+      </Tooltip>
     )
   }
 }
