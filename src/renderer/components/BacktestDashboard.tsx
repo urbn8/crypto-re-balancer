@@ -6,6 +6,8 @@ import { HorizontalLayout,
   Spacer,
   View } from "nice-react-layout"
 import { Symbol } from 'binance-api-node';
+import styled from 'styled-components'
+
 import AssetSelection from "./AssetSelection";
 import { Asset } from "../../common/Asset";
 import RebalancePeriod from "./RebalancePeriod";
@@ -17,6 +19,11 @@ export interface IProps {
 
 interface IState {
 }
+
+const PanelInnerWrapper = styled.div`
+  padding: 5px;
+  height: 100%;
+`
 
 export default class BacktestDashboard extends React.Component<IProps, IState> {
   constructor(props) {
@@ -30,15 +37,21 @@ export default class BacktestDashboard extends React.Component<IProps, IState> {
           <HorizontalLayout>
             <Panel proportion={2}>Chart</Panel>
             <Panel proportion={1}>
-              <BacktestSummary />
+              <PanelInnerWrapper>
+                <BacktestSummary />
+              </PanelInnerWrapper>
             </Panel>
           </HorizontalLayout>
           <HorizontalLayout>
             <Panel>
-              <AssetSelection assets={ this.props.assets }/>
+              <PanelInnerWrapper>
+                <AssetSelection assets={ this.props.assets }/>
+              </PanelInnerWrapper>
             </Panel>
             <Panel fixed fixedWidth={280}>
-              <RebalancePeriod />
+              <PanelInnerWrapper>
+                <RebalancePeriod />
+              </PanelInnerWrapper>
             </Panel>
           </HorizontalLayout>
         </VerticalLayout>
