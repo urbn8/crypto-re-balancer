@@ -9,6 +9,7 @@ import { Symbol } from 'binance-api-node';
 import AssetSelection from "./AssetSelection";
 import { Asset } from "../../common/Asset";
 import RebalancePeriod from "./RebalancePeriod";
+import BacktestSummary from "./BacktestSummary";
 
 export interface IProps {
   assets: Asset[]
@@ -24,11 +25,13 @@ export default class BacktestDashboard extends React.Component<IProps, IState> {
 
 	render() {
     return (
-      <View>
+      // <View>
         <VerticalLayout mockup>
           <HorizontalLayout mockup>
             <Panel proportion={2}>Chart</Panel>
-            <Panel proportion={1}>Summary</Panel>
+            <Panel proportion={1}>
+              <BacktestSummary />
+            </Panel>
           </HorizontalLayout>
           <HorizontalLayout>
             <Panel customCss={{
@@ -41,7 +44,7 @@ export default class BacktestDashboard extends React.Component<IProps, IState> {
             </Panel>
           </HorizontalLayout>
         </VerticalLayout>
-      </View>
+      // </View>
     )
   }
 }
