@@ -12,6 +12,7 @@ import AssetSelection from "./AssetSelection";
 import { Asset } from "../../common/Asset";
 import RebalancePeriod from "./RebalancePeriod";
 import BacktestSummary from "./BacktestSummary";
+import BacktestChart from "./BacktestChart";
 
 export interface IProps {
   assets: Asset[]
@@ -35,7 +36,11 @@ export default class BacktestDashboard extends React.Component<IProps, IState> {
       // <View>
         <VerticalLayout>
           <HorizontalLayout>
-            <Panel proportion={2}>Chart</Panel>
+            <Panel proportion={2}>
+              <PanelInnerWrapper>
+                <BacktestChart />
+              </PanelInnerWrapper>
+            </Panel>
             <Panel proportion={1}>
               <PanelInnerWrapper>
                 <BacktestSummary />
