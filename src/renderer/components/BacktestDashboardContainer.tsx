@@ -68,9 +68,29 @@ const storeActions = (state: IState) => {
     console.log(toJS(state.propotions))
   })
 
+  const setPropotionRatios = action((values: number[]) => {
+    if (values.length === 0) return
+    if (values.length === 1) {
+      state.propotions[0].ratio = 1
+    }
+
+    const ratios: number[] = [values[0] / 100]
+
+    for (let i = 1; i < values.length; i++) {
+      ratios.push((values[i] - values[i - 1])/ 100)
+    }
+
+    ratios.push( 1 - ratios[ratios.length - 1] )
+
+    for (let i = 0; i < ratios.length; i++) {
+      state.propotions[i].ratio = ratios[i]
+    }
+  })
+
   return {
     setAssets,
     toggleAssetSelection,
+    setPropotionRatios,
   }
 }
 
@@ -113,6 +133,9 @@ export default class BacktestDashboardContainer extends React.Component<{}, {}> 
     console.log('assets: ', assets)
 
     this.store.actions.setAssets(assets.map((asset) => ({...asset, selected: false})))
+    this.store.actions.toggleAssetSelection('BTC')
+    this.store.actions.toggleAssetSelection('ETH')
+    this.store.actions.toggleAssetSelection('BNB')
   }
 
 	render() {

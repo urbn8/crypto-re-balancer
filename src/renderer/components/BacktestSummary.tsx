@@ -17,6 +17,7 @@ interface IData {
 
 interface IProps {
   data: IData
+  setPropotionRatios: (values: number[]) => void
 }
 
 @observer
@@ -26,43 +27,7 @@ export default class BacktestSummary extends React.Component<IProps, {}> {
   }
 
 	render() {
-    // const data: IPropotion[] = [
-    //   {
-    //     symbol: 'BTC',
-    //     ratio: 0.5,
-    //   },
-    //   {
-    //     symbol: 'ETH',
-    //     ratio: 0.5,
-    //   },
-    //   {
-    //     symbol: 'QTUM',
-    //     ratio: 0.5,
-    //   },
-    //   {
-    //     symbol: 'NEO',
-    //     ratio: 0.5,
-    //   },
-    //   {
-    //     symbol: 'BNB',
-    //     ratio: 0.5,
-    //   },
-    //   {
-    //     symbol: 'SALT',
-    //     ratio: 0.5,
-    //   },
-    //   {
-    //     symbol: 'DNT',
-    //     ratio: 0.5,
-    //   },
-    // ]
-
-    const values = {
-      dangerStart: 12,
-      warningStart: 36,
-      warningEnd: 72,
-      dangerEnd: 90,
-    }
+    
 
     return (
       <Card interactive={false} elevation={Elevation.TWO} style={{
@@ -73,43 +38,99 @@ export default class BacktestSummary extends React.Component<IProps, {}> {
 
         <AssetsPropotion data={this.props.data}/>
 
-        <MultiSlider
-          defaultTrackIntent={Intent.SUCCESS}
-          labelStepSize={20}
-          max={100}
-          min={0}
-          // onChange={this.handleChange}
-          showTrackFill={false}
-          stepSize={2}
-        >
-          <MultiSlider.Handle
-            type="start"
-            value={values.dangerStart}
-            intentBefore="danger"
-            interactionKind={HandleInteractionKind.PUSH}
-          />
-          <MultiSlider.Handle
-            type="start"
-            value={values.warningStart}
-            intentBefore="warning"
-            interactionKind={HandleInteractionKind.PUSH}
-          />
-          <MultiSlider.Handle
-            type="end"
-            value={values.warningEnd}
-            intentAfter="warning"
-            interactionKind={HandleInteractionKind.PUSH}
-          />
-          <MultiSlider.Handle
-            type="end"
-            value={values.dangerEnd}
-            intentAfter="danger"
-            interactionKind={HandleInteractionKind.PUSH}
-          />
-        </MultiSlider>
+        <PropotionSlider data={this.props.data} setPropotionRatios={ this.props.setPropotionRatios }/>
 
         <Report />
       </Card>
+    )
+  }
+}
+
+@observer
+class PropotionSlider extends React.Component<IProps, {
+  propotions: IPropotion[]
+}> {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      propotions: this.props.data.propotions,
+    }
+  }
+
+  handleChange = (rawValues: number[]) => {
+    this.props.setPropotionRatios(rawValues)
+  }
+
+	render() {
+    // const values = {
+    //   dangerStart: 12,
+    //   warningStart: 36,
+    //   warningEnd: 72,
+    //   dangerEnd: 90,
+    // }
+    // const values = {
+    //   firstStart: 33.33,
+    //   secondStart: 66.66,
+    //   // thirdStart: 99.99,
+    // }
+
+    let stepSum = 0
+
+    return (
+      <MultiSlider
+        defaultTrackIntent={Intent.SUCCESS}
+        labelStepSize={20}
+        max={100}
+        min={0}
+        onChange={this.handleChange}
+        showTrackFill={false}
+        stepSize={2}
+      >
+        {
+          this.state.propotions.map((propotion, i) => {
+            if (i === this.state.propotions.length - 1) {
+              return undefined
+            }
+
+            const percent = propotion.ratio * 100
+            stepSum += percent
+            const value = stepSum
+
+            return <MultiSlider.Handle
+              key={ propotion.symbol }
+              type="start"
+              value={ value }
+              intentBefore="danger"
+              interactionKind={HandleInteractionKind.PUSH}
+            />
+          })
+        }
+        {/* <MultiSlider.Handle
+          type="start"
+          value={values.firstStart}
+          intentBefore="danger"
+          interactionKind={HandleInteractionKind.PUSH}
+        />
+        <MultiSlider.Handle
+          type="start"
+          value={values.secondStart}
+          intentBefore="warning"
+          interactionKind={HandleInteractionKind.PUSH}
+        /> */}
+        {/* <MultiSlider.Handle
+          type="start"
+          value={values.thirdStart}
+          intentAfter="warning"
+          interactionKind={HandleInteractionKind.PUSH}
+        /> */}
+        {/* <MultiSlider.Handle
+          type="end"
+          value={values.dangerEnd}
+          intentAfter="danger"
+          interactionKind={HandleInteractionKind.PUSH}
+        /> */}
+      </MultiSlider>
     )
   }
 }
@@ -180,7 +201,7 @@ class AssetPropotion extends React.Component<IAssetPropotionProps, {}> {
   }
 }
 
-class Report extends React.Component<any, IState> {
+class Report extends React.Component<{}, {}> {
   constructor(props) {
     super(props);
   }

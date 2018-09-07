@@ -43,7 +43,7 @@ export default class BacktestDashboard extends React.Component<IProps, {}> {
             </Panel>
             <Panel proportion={1}>
               <PanelInnerWrapper>
-                <BacktestSummary data={ this.props.data }/>
+                <BacktestSummary data={ this.props.data } setPropotionRatios={ this.props.actions.setPropotionRatios }/>
               </PanelInnerWrapper>
             </Panel>
           </HorizontalLayout>

@@ -97,10 +97,9 @@ class Asset extends React.Component<IAssetProps, {hover: boolean}> {
 
   render() {
     const {name, symbol, selected} = this.props.data
-
     return (
       <AssetWrapper
-        onMouseOut={() => this.mouseOut()} onMouseOver={() => this.mouseOver()}
+        // onMouseOut={() => this.mouseOut()} onMouseOver={() => this.mouseOver()}
         onClick={ this.props.onClick }
       >
         <Card interactive={true} elevation={Elevation.TWO}>
