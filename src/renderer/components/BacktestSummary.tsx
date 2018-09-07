@@ -1,4 +1,5 @@
 import * as React from "react";
+import { observer } from "mobx-react"
 import { HorizontalLayout,
   VerticalLayout,
   Panel,
@@ -8,46 +9,53 @@ import { HorizontalLayout,
 import { FormGroup, InputGroup, Card, Elevation, NumericInput, HTMLSelect, Dialog, Navbar, NavbarHeading, NavbarGroup, Alignment, Divider, H2, ButtonGroup, Button, HTMLTable, Tooltip, Position, MultiSlider, HandleInteractionKind, Intent } from "@blueprintjs/core";
 import styled from 'styled-components'
 import { Asset } from "../../common/Asset";
+import { IBacktestAsset, IPropotion } from "./BacktestDashboardContainer";
 
-interface IState {
+interface IData {
+  propotions: IPropotion[]
 }
 
-export default class BacktestSummary extends React.Component<any, IState> {
+interface IProps {
+  data: IData
+}
+
+@observer
+export default class BacktestSummary extends React.Component<IProps, {}> {
   constructor(props) {
     super(props);
   }
 
 	render() {
-    const data: IPropotion[] = [
-      {
-        symbol: 'BTC',
-        ratio: 0.5,
-      },
-      {
-        symbol: 'ETH',
-        ratio: 0.5,
-      },
-      {
-        symbol: 'QTUM',
-        ratio: 0.5,
-      },
-      {
-        symbol: 'NEO',
-        ratio: 0.5,
-      },
-      {
-        symbol: 'BNB',
-        ratio: 0.5,
-      },
-      {
-        symbol: 'SALT',
-        ratio: 0.5,
-      },
-      {
-        symbol: 'DNT',
-        ratio: 0.5,
-      },
-    ]
+    // const data: IPropotion[] = [
+    //   {
+    //     symbol: 'BTC',
+    //     ratio: 0.5,
+    //   },
+    //   {
+    //     symbol: 'ETH',
+    //     ratio: 0.5,
+    //   },
+    //   {
+    //     symbol: 'QTUM',
+    //     ratio: 0.5,
+    //   },
+    //   {
+    //     symbol: 'NEO',
+    //     ratio: 0.5,
+    //   },
+    //   {
+    //     symbol: 'BNB',
+    //     ratio: 0.5,
+    //   },
+    //   {
+    //     symbol: 'SALT',
+    //     ratio: 0.5,
+    //   },
+    //   {
+    //     symbol: 'DNT',
+    //     ratio: 0.5,
+    //   },
+    // ]
 
     const values = {
       dangerStart: 12,
@@ -63,7 +71,7 @@ export default class BacktestSummary extends React.Component<any, IState> {
         <H2>Summary</H2>
         <Divider />
 
-        <AssetsPropotion data={data}/>
+        <AssetsPropotion data={this.props.data}/>
 
         <MultiSlider
           defaultTrackIntent={Intent.SUCCESS}
@@ -106,13 +114,8 @@ export default class BacktestSummary extends React.Component<any, IState> {
   }
 }
 
-interface IPropotion {
-  symbol: string;
-  ratio: number
-}
-
 interface IAssetsPropotionProps {
-  data: IPropotion[]
+  data: IData
 }
 
 const AssetsPropotionWrapper = styled.div`
@@ -120,6 +123,7 @@ const AssetsPropotionWrapper = styled.div`
   flex-wrap: wrap;
 `
 
+@observer
 class AssetsPropotion extends React.Component<IAssetsPropotionProps, {}> {
   constructor(props) {
     super(props);
@@ -129,7 +133,7 @@ class AssetsPropotion extends React.Component<IAssetsPropotionProps, {}> {
     return (
       <AssetsPropotionWrapper>
         {
-          this.props.data.map((assetPropotion) => (
+          this.props.data.propotions.map((assetPropotion) => (
             <AssetPropotion key={ assetPropotion.symbol } data={ assetPropotion }/>
           ))
         }
@@ -158,6 +162,7 @@ const AssetImg = styled.img`
 const PropotionText = styled.span`
 `
 
+@observer
 class AssetPropotion extends React.Component<IAssetPropotionProps, {}> {
   constructor(props) {
     super(props);

@@ -13,10 +13,10 @@ import AssetSelection from "./AssetSelection";
 import RebalancePeriod from "./RebalancePeriod";
 import BacktestSummary from "./BacktestSummary";
 import BacktestChart from "./BacktestChart";
-import { StoreActions, IState } from "./BacktestDashboardContainer";
+import { StoreActions, State } from "./BacktestDashboardContainer";
 
 interface IProps {
-  data: IState
+  data: State
   actions: StoreActions
 }
 
@@ -43,7 +43,7 @@ export default class BacktestDashboard extends React.Component<IProps, {}> {
             </Panel>
             <Panel proportion={1}>
               <PanelInnerWrapper>
-                <BacktestSummary />
+                <BacktestSummary data={ this.props.data }/>
               </PanelInnerWrapper>
             </Panel>
           </HorizontalLayout>
