@@ -8,6 +8,7 @@ import { HorizontalLayout,
 import { Symbol } from 'binance-api-node';
 import AssetSelection from "./AssetSelection";
 import { Asset } from "../../common/Asset";
+import RebalancePeriod from "./RebalancePeriod";
 
 export interface IProps {
   assets: Asset[]
@@ -35,7 +36,9 @@ export default class BacktestDashboard extends React.Component<IProps, IState> {
             }}>
               <AssetSelection assets={ this.props.assets }/>
             </Panel>
-            <Panel fixed fixedWidth={200}>Configuration</Panel>
+            <Panel fixed fixedWidth={280}>
+              <RebalancePeriod />
+            </Panel>
           </HorizontalLayout>
         </VerticalLayout>
       </View>
