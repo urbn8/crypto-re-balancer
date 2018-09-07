@@ -80,7 +80,7 @@ const storeActions = (state: IState) => {
       ratios.push((values[i] - values[i - 1])/ 100)
     }
 
-    ratios.push( 1 - ratios[ratios.length - 1] )
+    ratios.push( (100 - values[values.length - 1]) / 100 )
 
     for (let i = 0; i < ratios.length; i++) {
       state.propotions[i].ratio = ratios[i]
