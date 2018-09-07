@@ -1,4 +1,5 @@
 import * as React from "react";
+import { observer } from "mobx-react"
 import { HorizontalLayout,
   VerticalLayout,
   Panel,
@@ -9,16 +10,14 @@ import { Symbol } from 'binance-api-node';
 import styled from 'styled-components'
 
 import AssetSelection from "./AssetSelection";
-import { Asset } from "../../common/Asset";
 import RebalancePeriod from "./RebalancePeriod";
 import BacktestSummary from "./BacktestSummary";
 import BacktestChart from "./BacktestChart";
+import { StoreActions, IState } from "./BacktestDashboardContainer";
 
-export interface IProps {
-  assets: Asset[]
-}
-
-interface IState {
+interface IProps {
+  data: IState
+  actions: StoreActions
 }
 
 const PanelInnerWrapper = styled.div`
@@ -26,7 +25,8 @@ const PanelInnerWrapper = styled.div`
   height: 100%;
 `
 
-export default class BacktestDashboard extends React.Component<IProps, IState> {
+@observer
+export default class BacktestDashboard extends React.Component<IProps, {}> {
   constructor(props) {
     super(props);
   }
@@ -50,7 +50,7 @@ export default class BacktestDashboard extends React.Component<IProps, IState> {
           <HorizontalLayout>
             <Panel>
               <PanelInnerWrapper>
-                <AssetSelection assets={ this.props.assets }/>
+                <AssetSelection data={ this.props.data } toggleAssetSelection={ this.props.actions.toggleAssetSelection }/>
               </PanelInnerWrapper>
             </Panel>
             <Panel fixed fixedWidth={280}>

@@ -1,15 +1,24 @@
 import * as React from "react";
+import { observer } from "mobx-react"
 import { Button, Card, Elevation, H2, H4, Divider, Spinner } from "@blueprintjs/core"
 import { Symbol } from 'binance-api-node';
 import styled from 'styled-components'
 import Scrollbars from 'react-custom-scrollbars'
-
-import { Asset as IAsset } from "../../common/Asset";
+import { IBacktestAsset } from "./BacktestDashboardContainer";
 
 interface IProps {
-  assets?: IAsset[]
+  data: {
+    assets: IBacktestAsset[]
+  }
+  toggleAssetSelection: (symbol: string) => void
 }
 
+const AssetsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+
+@observer
 export default class AssetSelection extends React.Component<IProps, {}> {
   constructor(props) {
     super(props);
@@ -24,15 +33,17 @@ export default class AssetSelection extends React.Component<IProps, {}> {
         <Divider />
         
         {
-          !this.props.assets ? (
+          this.props.data.assets.length === 0 ? (
             <Spinner size={Spinner.SIZE_STANDARD} />
           ) :
           <Scrollbars>
-            {
-              this.props.assets.map((asset) => (
-                <Asset key={ asset.symbol } name={ asset.name } symbol={ asset.symbol } selected={ false }/>
-              ))
-            }
+            <AssetsWrapper>
+              {
+                this.props.data.assets.map((asset) => (
+                  <Asset key={ asset.symbol } data={asset} onClick={ () => this.props.toggleAssetSelection(asset.symbol) }/>
+                ))
+              }
+            </AssetsWrapper>
           </Scrollbars>
         }
 
@@ -45,13 +56,11 @@ export default class AssetSelection extends React.Component<IProps, {}> {
 }
 
 interface IAssetProps extends React.Props<Asset> {
-  name: string
-  symbol: string
-  selected: boolean
+  data: IBacktestAsset
+  onClick: () => void
 }
 
 const AssetWrapper = styled.div`
-  float: left;
   width: 130px;
   height: 90px;
   margin: 4px 8px 24px 2px;
@@ -68,6 +77,7 @@ const AssetName = styled.div`
   margin-top: 10px;
 `
 
+@observer
 class Asset extends React.Component<IAssetProps, {hover: boolean}> {
   constructor(props) {
     super(props);
@@ -78,22 +88,23 @@ class Asset extends React.Component<IAssetProps, {hover: boolean}> {
   }
 
   mouseOut() {
-    console.log("Mouse out!!!");
     this.setState({hover: false});
   }
   
   mouseOver() {
-    console.log("Mouse over!!!");
     this.setState({hover: true});
   }
 
   render() {
-    const {name, symbol} = this.props
+    const {name, symbol, selected} = this.props.data
 
     return (
-      <AssetWrapper onMouseOut={() => this.mouseOut()} onMouseOver={() => this.mouseOver()}>
+      <AssetWrapper
+        onMouseOut={() => this.mouseOut()} onMouseOver={() => this.mouseOver()}
+        onClick={ this.props.onClick }
+      >
         <Card interactive={true} elevation={Elevation.TWO}>
-          <AssetImg src={ `cryptocurrency-icons/svg/${ this.state.hover ? 'color' : 'white' }/${ symbol.toLowerCase() }.svg` }/>
+          <AssetImg src={ `cryptocurrency-icons/svg/${ selected ? 'color' : 'white' }/${ symbol.toLowerCase() }.svg` }/>
           <AssetName>{ name }</AssetName>
         </Card>
       </AssetWrapper>
