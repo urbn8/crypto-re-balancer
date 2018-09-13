@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import * as React from "react";
 import axios from 'axios'
 
-import CandleMgoRepo from '../../common/CandleMgoRepo'
+import CandleMgoRepo from '../../../common/CandleMgoRepo'
 
 import { CandleChartResult } from 'binance-api-node';
 

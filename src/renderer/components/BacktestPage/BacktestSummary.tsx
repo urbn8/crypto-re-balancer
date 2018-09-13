@@ -9,8 +9,8 @@ import { HorizontalLayout,
   View } from "nice-react-layout"
 import { FormGroup, InputGroup, Card, Elevation, NumericInput, HTMLSelect, Dialog, Navbar, NavbarHeading, NavbarGroup, Alignment, Divider, H2, ButtonGroup, Button, HTMLTable, Tooltip, Position, MultiSlider, HandleInteractionKind, Intent } from "@blueprintjs/core";
 import styled from 'styled-components'
-import { Asset } from "../../common/Asset";
-import { IBacktestAsset, IPropotion } from "./BacktestDashboardContainer";
+import { Asset } from "../../../common/Asset";
+import { IPropotion } from "./store/store";
 
 declare const __static : string
 

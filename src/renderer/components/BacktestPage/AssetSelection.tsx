@@ -5,7 +5,7 @@ import { Button, Card, Elevation, H2, H4, Divider, Spinner } from "@blueprintjs/
 import { Symbol } from 'binance-api-node';
 import styled from 'styled-components'
 import Scrollbars from 'react-custom-scrollbars'
-import { IBacktestAsset } from "./BacktestDashboardContainer";
+import { IBacktestAsset } from "./store/store";
 
 declare const __static : string
 
