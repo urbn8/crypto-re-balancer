@@ -49,26 +49,26 @@ export default class BacktestDashboard extends React.Component<any, IState> {
 
     // const btc = await candleRepo.findAllOneYear('BTCUSDT', '1d')
 
-    const assets: Asset[] = [
-      {
-        symbol: 'BTCUSDT',
-        name: 'Bitcoin',
-        icon: '',
-        color: 'rgb(255, 205, 86)',
-      },
-      {
-        symbol: 'ETHUSDT',
-        name: 'Ethereum',
-        icon: '',
-        color: 'rgb(153, 102, 255)',
-      },
-      {
-        symbol: 'BNBUSDT',
-        name: 'BNB',
-        icon: '',
-        color: 'rgb(201, 203, 207)',
-      },
-    ]
+    // const assets: Asset[] = [
+    //   {
+    //     symbol: 'BTCUSDT',
+    //     name: 'Bitcoin',
+    //     icon: '',
+    //     color: 'rgb(255, 205, 86)',
+    //   },
+    //   {
+    //     symbol: 'ETHUSDT',
+    //     name: 'Ethereum',
+    //     icon: '',
+    //     color: 'rgb(153, 102, 255)',
+    //   },
+    //   {
+    //     symbol: 'BNBUSDT',
+    //     name: 'BNB',
+    //     icon: '',
+    //     color: 'rgb(201, 203, 207)',
+    //   },
+    // ]
 
 
     // const balanceOnceADayResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(oneDayInMilliseconds, 0))
