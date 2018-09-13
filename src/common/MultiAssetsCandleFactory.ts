@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 
-import { Asset, AssetSymbol } from "./Asset";
+import { Asset } from "./Asset";
 import { CandleChartResult } from "binance-api-node";
 import { MultiAssetsCandle } from "./MultiAssetsCandle";
 
@@ -14,14 +14,14 @@ export class MultiAssetsCandleFactory {
     }
   }
 
-  get assetSymbols(): AssetSymbol[] {
+  get strings(): string[] {
     return this.assets.map((asset) => asset.symbol)
   }
 
   public get candles(): MultiAssetsCandle[] {
     const candles: MultiAssetsCandle[] = []
 
-    const candleIndicesByAssets: Map<AssetSymbol, number> = new Map()
+    const candleIndicesByAssets: Map<string, number> = new Map()
     for (const asset of this.assets) {
       candleIndicesByAssets.set(asset.symbol, 0)
     }
@@ -35,7 +35,7 @@ export class MultiAssetsCandleFactory {
         break
       }
 
-      const candle = MultiAssetsCandle.fromCandlesSet(timestamp, this.assetSymbols, candlesSet)
+      const candle = MultiAssetsCandle.fromCandlesSet(timestamp, this.strings, candlesSet)
       candles.push(candle)
 
       prevTimestamp = timestamp
@@ -44,14 +44,14 @@ export class MultiAssetsCandleFactory {
     return candles
   }
 
-  takeCandlesSet(candlesOfAssets: CandleChartResult[][], candleIndicesByAssets: Map<AssetSymbol, number>): [number, Map<AssetSymbol, CandleChartResult | undefined>] {
-    const candles: Map<AssetSymbol, CandleChartResult> = new Map()
+  takeCandlesSet(candlesOfAssets: CandleChartResult[][], candleIndicesByAssets: Map<string, number>): [number, Map<string, CandleChartResult | undefined>] {
+    const candles: Map<string, CandleChartResult> = new Map()
     for (let assetIndex = 0; assetIndex < this.assets.length; assetIndex++) {
-      const assetSymbol = this.assets[assetIndex].symbol
-      const candleIndex = candleIndicesByAssets.get(assetSymbol)
+      const string = this.assets[assetIndex].symbol
+      const candleIndex = candleIndicesByAssets.get(string)
 
       const candle = candlesOfAssets[assetIndex][candleIndex]
-      candles.set(assetSymbol, candle)
+      candles.set(string, candle)
     }
 
     if (this.isEmpty(candles)) {
@@ -61,7 +61,7 @@ export class MultiAssetsCandleFactory {
     const oldestCandle = this.oldestCandle(Array.from(candles.values()))
     const timestamp = oldestCandle.openTime
 
-    const sameTimestampCandles: Map<AssetSymbol, CandleChartResult> = new Map()
+    const sameTimestampCandles: Map<string, CandleChartResult> = new Map()
     
     candles.forEach((candle, symbol) => {
       if (!candle) {
@@ -91,7 +91,7 @@ export class MultiAssetsCandleFactory {
     return candle
   }
 
-  isEmpty(candles: Map<AssetSymbol, CandleChartResult | undefined>) {
+  isEmpty(candles: Map<string, CandleChartResult | undefined>) {
     for (const candle of candles.values()) {
       if (typeof candle !== 'undefined') {
         return false

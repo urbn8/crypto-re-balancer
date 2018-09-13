@@ -1,7 +1,7 @@
-export type AssetSymbol = string
+export type string = string
 
 export interface Asset {
-  symbol: AssetSymbol;
+  symbol: string;
   name: string;
   icon: string;
   color: string;

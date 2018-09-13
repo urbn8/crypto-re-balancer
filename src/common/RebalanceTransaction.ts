@@ -1,20 +1,19 @@
 import { Big } from "big.js";
-import { AssetSymbol } from "./Asset";
 import { PorfolioBalance } from "./PorfolioBalance";
 
 export class RebalanceTransaction {
   constructor(
     private readonly initialPorfolioBalance: PorfolioBalance,
-    private readonly exchangeRatesByAssets: Map<AssetSymbol, Big>,
+    private readonly exchangeRatesByAssets: Map<string, Big>,
   ) {
     // validate
     if (initialPorfolioBalance.size != exchangeRatesByAssets.size) {
       throw new Error('initialPorfolioBalance.size != exchangeRatesByAssets.size')
     }
 
-    for (const assetSymbol of initialPorfolioBalance.assetSymbols) {
-      if (!exchangeRatesByAssets.has(assetSymbol)) {
-        throw new Error('!exchangeRatesByAssets.has(assetSymbol)')
+    for (const string of initialPorfolioBalance.strings) {
+      if (!exchangeRatesByAssets.has(string)) {
+        throw new Error('!exchangeRatesByAssets.has(string)')
       }
     }
   }
@@ -27,7 +26,7 @@ export class RebalanceTransaction {
 
     const eachAssetQuoteBalance = totalQuoteBalance.div(this.initialPorfolioBalance.size)
 
-    const amountsByAssets: Map<AssetSymbol, Big> = new Map()
+    const amountsByAssets: Map<string, Big> = new Map()
 
     this.exchangeRatesByAssets.forEach((exchangeRate, symbol) => {
       if (exchangeRate.eq(0)) {
