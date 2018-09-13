@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as path from 'path'
 import { observer } from "mobx-react"
 import { HorizontalLayout,
   VerticalLayout,
@@ -10,6 +11,8 @@ import { FormGroup, InputGroup, Card, Elevation, NumericInput, HTMLSelect, Dialo
 import styled from 'styled-components'
 import { Asset } from "../../common/Asset";
 import { IBacktestAsset, IPropotion } from "./BacktestDashboardContainer";
+
+declare const __static : string
 
 interface IData {
   propotions: IPropotion[]
@@ -194,7 +197,8 @@ class AssetPropotion extends React.Component<IAssetPropotionProps, {}> {
       <Tooltip content={ <span className='bp3-text-small'>{ this.props.data.symbol }</span> } position={ Position.TOP_LEFT }>
         <AssetPropotionWrapper>
             <PropotionText className='bp3-text-large'>{ Math.round(this.props.data.ratio * 100 * 100) / 100 }%</PropotionText>
-            <AssetImg src={ `cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg` }/>
+            {/* <AssetImg src={ require(path.join(__static, `cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg`)) }/> */}
+            <AssetImg src={ `file:///${ __static }/cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg` }/>
         </AssetPropotionWrapper>
       </Tooltip>
     )

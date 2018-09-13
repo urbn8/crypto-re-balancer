@@ -12,7 +12,7 @@ const binance = BinanceAPI()
 
 ipc.answerRenderer('assets', async () => {
   const exchangeInfo: ExchangeInfo = await binance.exchangeInfo()
-  const exchangeSymbols = exchangeInfo.symbols
+  const exchangeSymbols = exchangeInfo.symbols.filter((symbol) => symbol.quoteAsset === 'USDT')
   const symbols = _.map(exchangeSymbols, (s): string => s.baseAsset)
 
   const uniqSymbols = _.uniq(symbols)
@@ -21,6 +21,8 @@ ipc.answerRenderer('assets', async () => {
   const symbolsWithIcon = _.map(files, (file) => _.trimEnd(file, '.svg'))
   
   const allSymbols = _.intersectionWith(uniqSymbols, symbolsWithIcon, (a, b) => a.toLowerCase() === b.toLowerCase())
+
+  console.log('allSymbols', JSON.stringify(allSymbols.map((s) => `${s}USDT`)))
 
   const assets = _.map(allSymbols, (s): Asset => ({
     symbol: s,

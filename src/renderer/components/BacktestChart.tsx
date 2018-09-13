@@ -37,14 +37,14 @@ export default class BacktestChart extends React.Component<any, IState> {
       document.head.appendChild(script);
     }
 
-    const resp = await axios.get('http://localhost:8080/backtest?source=unsafesmooth_t')
-    console.log('resp.data.default.length', resp.data.default[0], resp.data.balanced[0])
+    const resp = await axios.get('http://localhost:8080/backtest/default?rebalancePeriodUnit=day&rebalancePeriod=1')
+    console.log('resp.data.default.length', resp.data.hold[0], resp.data.rebalance[0])
     const data = [
       {
         yValueFormatString: "$#,###",
         xValueFormatString: "YYYY",
         type: "spline",
-        dataPoints: resp.data.default.map((xy) => ({
+        dataPoints: resp.data.hold.map((xy) => ({
           x: new Date(xy.x),
           y: xy.y
         })),
@@ -53,7 +53,7 @@ export default class BacktestChart extends React.Component<any, IState> {
         yValueFormatString: "$#,###",
         xValueFormatString: "YYYY",
         type: "spline",
-        dataPoints: resp.data.balanced.map((xy) => ({
+        dataPoints: resp.data.rebalance.map((xy) => ({
           x: new Date(xy.x),
           y: xy.y
         })),

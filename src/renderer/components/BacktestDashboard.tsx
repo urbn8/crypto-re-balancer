@@ -6,7 +6,6 @@ import { HorizontalLayout,
   Separator,
   Spacer,
   View } from "nice-react-layout"
-import { Symbol } from 'binance-api-node';
 import styled from 'styled-components'
 
 import AssetSelection from "./AssetSelection";
