@@ -40,6 +40,7 @@ export default class RebalancePeriod extends React.Component<IProps, {}> {
         >
           {/* <NumericInput id='period' value='1'/> */}
           <InputGroup id='period' type='number' placeholder="Placeholder text" value={ data.rebalancePeriod + '' }
+            min='1' max='10'
             onChange={ (e) => this.props.onRelalancePeriodChange(parseInt(e.target.value)) }
           />
         </FormGroup>

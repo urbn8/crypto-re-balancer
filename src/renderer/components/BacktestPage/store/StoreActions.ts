@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ipc from 'electron-better-ipc'
 import { observable, action, extendObservable, configure, IObservableArray, computed, toJS } from "mobx"
-import { State, IBacktestAsset, PeriodUnit } from "./store";
+import { State, IBacktestAsset, PeriodUnit, IPropotion } from "./store";
 
 export default class StoreActions {
 
@@ -62,5 +62,25 @@ export default class StoreActions {
 
   @action.bound public onRelalancePeriodUnitChange(rebalancePeriodUnit: PeriodUnit) {
     this.state.rebalancePeriodUnit = rebalancePeriodUnit
+  }
+
+  @action.bound public chartBacktests(
+    propotions: IPropotion[],
+    rebalancePeriod: number,
+    rebalancePeriodUnit: PeriodUnit,
+  ) {
+    if (rebalancePeriod <= 0) {
+      return
+    }
+
+    if (rebalancePeriod > 10) {
+      return
+    }
+
+    const API_URL = process.env.ELECTRON_WEBPACK_APP_API_URL || 'http://localhost:8080'
+
+    const url = `${ API_URL }/backtest/default?rebalancePeriodUnit=${ rebalancePeriodUnit }&rebalancePeriod=${ rebalancePeriod }`
+    console.log('url', url)
+    // const resp = await axios.get('http://localhost:8080/backtest/default?rebalancePeriodUnit=day&rebalancePeriod=1')
   }
 }

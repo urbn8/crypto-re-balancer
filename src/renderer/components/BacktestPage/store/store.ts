@@ -1,4 +1,5 @@
-import { configure, IObservableArray, observable } from "mobx";
+import { configure, IObservableArray, observable, autorun } from "mobx";
+import * as debounce from 'debounce-promise'
 import StoreActions from "./StoreActions";
 
 configure({enforceActions: 'observed'})
@@ -33,6 +34,29 @@ const Store = () => {
   const state = new State()
 
   const actions = new StoreActions(state)
+
+  const backtest = debounce(async (
+    propotions,
+    rebalancePeriod,
+    rebalancePeriodUnit,
+  ) => {
+    await actions.chartBacktests(
+      propotions,
+      rebalancePeriod,
+      rebalancePeriodUnit,
+      )
+  }, 1000, { leading: false })
+  autorun(() => {
+    const propotions = state.propotions
+    const rebalancePeriod = state.rebalancePeriod
+    const rebalancePeriodUnit = state.rebalancePeriodUnit
+
+    backtest(
+      propotions,
+      rebalancePeriod,
+      rebalancePeriodUnit,
+    )
+  })
 
   return {
     state,
