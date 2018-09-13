@@ -7,7 +7,7 @@ import BacktestChart from "./BacktestChart";
 import BacktestSummary from "./BacktestSummary";
 import RebalancePeriod from "./RebalancePeriod";
 import Store, { IBacktestAsset, IStore } from './store/store';
-
+import { observer } from 'mobx-react';
 
 type symbolStatus = 'PRE_TRADING' | 'TRADING' | 'POST_TRADING' | 'END_OF_DAY' | 'HALT' | 'AUCTION_MATCH' | 'BREAK'
 
@@ -16,6 +16,7 @@ const PanelInnerWrapper = styled.div`
   height: 100%;
 `
 
+@observer
 export default class BacktestPage extends React.Component<{}, {}> {
   private store: IStore
 
@@ -62,7 +63,10 @@ export default class BacktestPage extends React.Component<{}, {}> {
             </Panel>
             <Panel fixed fixedWidth={280}>
               <PanelInnerWrapper>
-                <RebalancePeriod />
+                <RebalancePeriod data={ state }
+                  onRelalancePeriodChange={ actions.onRelalancePeriodChange }
+                  onRelalancePeriodUnitChange={ actions.onRelalancePeriodUnitChange }
+                />
               </PanelInnerWrapper>
             </Panel>
           </HorizontalLayout>

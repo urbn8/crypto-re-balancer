@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ipc from 'electron-better-ipc'
 import { observable, action, extendObservable, configure, IObservableArray, computed, toJS } from "mobx"
-import { State, IBacktestAsset } from "./store";
+import { State, IBacktestAsset, PeriodUnit } from "./store";
 
 export default class StoreActions {
 
@@ -54,5 +54,13 @@ export default class StoreActions {
     for (let i = 0; i < ratios.length; i++) {
       this.state.propotions[i].ratio = ratios[i]
     }
+  }
+
+  @action.bound public onRelalancePeriodChange(rebalancePeriod: number) {
+    this.state.rebalancePeriod = rebalancePeriod
+  }
+
+  @action.bound public onRelalancePeriodUnitChange(rebalancePeriodUnit: PeriodUnit) {
+    this.state.rebalancePeriodUnit = rebalancePeriodUnit
   }
 }

@@ -15,14 +15,18 @@ export interface IPropotion {
   ratio: number
 }
 
-// interface IState {
-//   assets: IObservableArray<IBacktestAsset>
-//   propotions: IObservableArray<IPropotion>
-// }
+export type PeriodUnit = 'hour' | 'day' | 'week' | 'never'
 
 export class State {
+  // asset selection
   @observable assets: IObservableArray<IBacktestAsset> = observable.array()
+
+  // summary
   @observable propotions: IObservableArray<IPropotion> = observable.array()
+
+  // rebalance period
+  @observable rebalancePeriod: number = 1
+  @observable rebalancePeriodUnit: PeriodUnit = 'week'
 }
 
 const Store = () => {
