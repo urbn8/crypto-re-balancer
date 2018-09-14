@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "npm run compile && electron-builder",
+    "dist": "npm run compile && electron-builder --win --linux --x64",
     "dist:dir": "npm run dist --dir -c.compression=store -c.mac.identity=null",
     "pretest": "tsc",
     "test": "nyc --reporter=lcov --require ts-node/register tape tests/**/*-test.{ts,js} | tap-spec; nyc report ---reporter=text",
