@@ -28,6 +28,10 @@ export class State {
   // rebalance period
   @observable rebalancePeriod: number = 1
   @observable rebalancePeriodUnit: PeriodUnit = 'week'
+
+  // chart
+  @observable chartHoldData = observable.array([], {deep: false})
+  @observable chartRebalanceData = observable.array([], {deep: false})
 }
 
 const Store = () => {

@@ -46,7 +46,7 @@ export default class BacktestPage extends React.Component<{}, {}> {
           <HorizontalLayout>
             <Panel proportion={2}>
               <PanelInnerWrapper>
-                <BacktestChart />
+                <BacktestChart data={ state }/>
               </PanelInnerWrapper>
             </Panel>
             <Panel proportion={1}>

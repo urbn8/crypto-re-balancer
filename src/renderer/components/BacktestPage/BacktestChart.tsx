@@ -6,15 +6,23 @@ import axios from 'axios'
 import CandleMgoRepo from '../../../common/CandleMgoRepo'
 
 import { CandleChartResult } from 'binance-api-node';
+import { autorun } from 'mobx';
 
 declare var __static: string
 declare var CanvasJS: any
 
 interface IState {
-  candlesByAssets: Map<string, CandleChartResult[]>
+  // candlesByAssets: Map<string, CandleChartResult[]>
 }
 
-export default class BacktestChart extends React.Component<any, IState> {
+interface IProps {
+  data: {
+    chartHoldData: any[]
+    chartRebalanceData: any[]
+  }
+}
+
+export default class BacktestChart extends React.Component<IProps, {}> {
 
   // private canvas: React.RefObject<HTMLCanvasElement>
   private canvas: React.RefObject<HTMLDivElement>
@@ -24,7 +32,7 @@ export default class BacktestChart extends React.Component<any, IState> {
     this.canvas = React.createRef();
 
     this.state = {
-      candlesByAssets: undefined
+      // candlesByAssets: undefined
     }
   }
 
@@ -37,26 +45,22 @@ export default class BacktestChart extends React.Component<any, IState> {
       document.head.appendChild(script);
     }
 
-    const resp = await axios.get('http://localhost:8080/backtest/default?rebalancePeriodUnit=day&rebalancePeriod=1')
-    console.log('resp.data.default.length', resp.data.hold[0], resp.data.rebalance[0])
+    // const API_URL = process.env.ELECTRON_WEBPACK_APP_API_URL || 'http://localhost:8080'
+    // const url = `${ API_URL }/backtest/default?rebalancePeriodUnit=week&rebalancePeriod=1`
+    // const resp = await axios.get(url)
+    // console.log('resp.data.default.length', resp.data.hold[0], resp.data.rebalance[0])
     const data = [
       {
         yValueFormatString: "$#,###",
         xValueFormatString: "YYYY",
         type: "spline",
-        dataPoints: resp.data.hold.map((xy) => ({
-          x: new Date(xy.x),
-          y: xy.y
-        })),
+        dataPoints: this.props.data.chartHoldData,
       },
       {
         yValueFormatString: "$#,###",
         xValueFormatString: "YYYY",
         type: "spline",
-        dataPoints: resp.data.rebalance.map((xy) => ({
-          x: new Date(xy.x),
-          y: xy.y
-        })),
+        dataPoints: this.props.data.chartRebalanceData,
       }
     ]
 
@@ -91,6 +95,14 @@ export default class BacktestChart extends React.Component<any, IState> {
     }
 
     this.canvas.current.addEventListener("mousewheel", mouseWheelHandler, false);
+
+    console.log('autorun start')
+    autorun(() => {
+      console.log('autorun')
+      data[0].dataPoints = this.props.data.chartHoldData
+      data[1].dataPoints = this.props.data.chartRebalanceData
+      chart.render()
+    })
   }
 
 	render() {

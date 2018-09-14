@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as ipc from 'electron-better-ipc'
+import axios from 'axios'
 import { observable, action, extendObservable, configure, IObservableArray, computed, toJS, flow } from "mobx"
 import { State, IBacktestAsset, PeriodUnit, IPropotion } from "./store";
 
@@ -65,6 +66,7 @@ export default class StoreActions {
   }
 
   @action.bound public chartBacktests = flow(function * (
+    this: StoreActions,
     propotions: IPropotion[],
     rebalancePeriod: number,
     rebalancePeriodUnit: PeriodUnit,
@@ -83,6 +85,21 @@ export default class StoreActions {
 
     const url = `${ API_URL }/backtest/default?rebalancePeriodUnit=${ rebalancePeriodUnit }&rebalancePeriod=${ rebalancePeriod }&assets=${ assets }`
     console.log('url', url)
-    // const resp = await axios.get('http://localhost:8080/backtest/default?rebalancePeriodUnit=day&rebalancePeriod=1')
+    
+    const resp = yield axios.get(url)
+    console.log('resp.data.default.length', resp.data.hold[0], resp.data.rebalance[0])
+
+    const hold = resp.data.hold.map((xy) => ({
+      x: new Date(xy.x),
+      y: xy.y
+    }))
+
+    const rebalance = resp.data.rebalance.map((xy) => ({
+      x: new Date(xy.x),
+      y: xy.y
+    }))
+
+    this.state.chartHoldData.replace(hold)
+    this.state.chartRebalanceData.replace(rebalance)
   })
 }

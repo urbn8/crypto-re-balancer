@@ -216,23 +216,23 @@ class Report extends React.Component<{}, {}> {
         <tbody className='bp3-text-large'>
           <tr>
             <td>Rebalancing Final:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
           <tr>
             <td>Holding Final:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
           <tr>
             <td>Initial Investment:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
           <tr>
             <td>Rebalanced:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
           <tr>
             <td>Trading Fee:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
         </tbody>
       </HTMLTable>
