@@ -1,4 +1,4 @@
-import { configure, IObservableArray, observable, autorun } from "mobx";
+import { configure, IObservableArray, observable, autorun, toJS } from "mobx";
 import * as debounce from 'debounce-promise'
 import StoreActions from "./StoreActions";
 
@@ -48,10 +48,11 @@ const Store = () => {
       propotions,
       rebalancePeriod,
       rebalancePeriodUnit,
-      )
-  }, 1000, { leading: false })
+    )
+  }, 300, { leading: false })
   autorun(() => {
     const propotions = state.propotions
+    toJS(propotions)
     const rebalancePeriod = state.rebalancePeriod
     const rebalancePeriodUnit = state.rebalancePeriodUnit
 

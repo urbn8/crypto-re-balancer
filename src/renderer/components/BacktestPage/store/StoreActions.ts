@@ -81,6 +81,7 @@ export default class StoreActions {
 
     const API_URL = process.env.ELECTRON_WEBPACK_APP_API_URL || 'http://localhost:8080'
 
+    // const assets = propotions.map((propotion) => propotion.symbol + ':' + propotion.ratio).join(',')
     const assets = propotions.map((propotion) => propotion.symbol).join(',')
 
     const url = `${ API_URL }/backtest/default?rebalancePeriodUnit=${ rebalancePeriodUnit }&rebalancePeriod=${ rebalancePeriod }&assets=${ assets }`
