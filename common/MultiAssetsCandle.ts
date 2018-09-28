@@ -1,22 +1,22 @@
-import { AssetSymbol } from "./Asset";
+import { string } from "./Asset";
 import { CandleChartResult } from "binance-api-node";
 import { Big } from "big.js";
 
 export class MultiAssetsCandle {
   constructor(
     public timestamp: number,
-    public data: Map<AssetSymbol, CandleChartResult | undefined>,
+    public data: Map<string, CandleChartResult | undefined>,
   ) {}
 
-  get exchangeRate(): Map<AssetSymbol, Big> {
-    const data: Map<AssetSymbol, Big> = new Map()
-    this.data.forEach((candle, assetSymbol) => {
+  get exchangeRate(): Map<string, Big> {
+    const data: Map<string, Big> = new Map()
+    this.data.forEach((candle, string) => {
       if (!candle) {
-        data.set(assetSymbol, new Big(0))
+        data.set(string, new Big(0))
         return
       }
 
-      data.set(assetSymbol, new Big(candle.close))
+      data.set(string, new Big(candle.close))
     })
 
     return data
@@ -31,14 +31,14 @@ export class MultiAssetsCandle {
     }
   }
 
-  static fromCandlesSet(timestamp: number, assetSymbols: AssetSymbol[], candlesSet: Map<AssetSymbol, CandleChartResult | undefined>): MultiAssetsCandle {
-    if (assetSymbols.length !== candlesSet.size) {
-      // console.error('assetSymbols', assetSymbols, 'candlesSet', candlesSet)
-      throw new Error('assetSymbols.length !== candlesSet.length')
+  static fromCandlesSet(timestamp: number, strings: string[], candlesSet: Map<string, CandleChartResult | undefined>): MultiAssetsCandle {
+    if (strings.length !== candlesSet.size) {
+      // console.error('strings', strings, 'candlesSet', candlesSet)
+      throw new Error('strings.length !== candlesSet.length')
     }
 
-    const data: Map<AssetSymbol, CandleChartResult> = new Map()
-    for (const symbol of assetSymbols) {
+    const data: Map<string, CandleChartResult> = new Map()
+    for (const symbol of strings) {
       data.set(symbol, candlesSet.get(symbol))
     }
 

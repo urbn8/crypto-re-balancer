@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as path from 'path'
 import { observer } from "mobx-react"
 import { HorizontalLayout,
   VerticalLayout,
@@ -6,10 +7,12 @@ import { HorizontalLayout,
   Separator,
   Spacer,
   View } from "nice-react-layout"
-import { FormGroup, InputGroup, Card, Elevation, NumericInput, HTMLSelect, Dialog, Navbar, NavbarHeading, NavbarGroup, Alignment, Divider, H2, ButtonGroup, Button, HTMLTable, Tooltip, Position, MultiSlider, HandleInteractionKind, Intent } from "@blueprintjs/core";
+import { FormGroup, InputGroup, Card, Elevation, NumericInput, HTMLSelect, Dialog, Navbar, NavbarHeading, NavbarGroup, Alignment, Divider, H2, ButtonGroup, Button, HTMLTable, Tooltip, Position, MultiSlider, HandleInteractionKind, Intent, EditableText } from "@blueprintjs/core";
 import styled from 'styled-components'
-import { Asset } from "../../common/Asset";
-import { IBacktestAsset, IPropotion } from "./BacktestDashboardContainer";
+import { Asset } from "../../../common/Asset";
+import { IPropotion } from "./store/store";
+
+declare const __static : string
 
 interface IData {
   propotions: IPropotion[]
@@ -194,7 +197,8 @@ class AssetPropotion extends React.Component<IAssetPropotionProps, {}> {
       <Tooltip content={ <span className='bp3-text-small'>{ this.props.data.symbol }</span> } position={ Position.TOP_LEFT }>
         <AssetPropotionWrapper>
             <PropotionText className='bp3-text-large'>{ Math.round(this.props.data.ratio * 100 * 100) / 100 }%</PropotionText>
-            <AssetImg src={ `cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg` }/>
+            {/* <AssetImg src={ require(path.join(__static, `cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg`)) }/> */}
+            <AssetImg src={ `file:///${ __static }/cryptocurrency-icons/svg/color/${ this.props.data.symbol.toLowerCase() }.svg` }/>
         </AssetPropotionWrapper>
       </Tooltip>
     )
@@ -206,29 +210,46 @@ class Report extends React.Component<{}, {}> {
     super(props);
   }
 
+  handleInitialInvestmentChange = (value) => {
+    console.log(arguments, value)
+  }
+
 	render() {
     return (
-      <HTMLTable className='bp3-interactive' bordered={ true } style={{width: '100%'}}>
+      <HTMLTable bordered={ true } style={{width: '100%'}}>
         <tbody className='bp3-text-large'>
           <tr>
+            <td>Initial Investment:</td>
+            <td>
+              <EditableText
+                // intent={this.state.intent}
+                // maxLength={this.state.maxLength}
+                maxLines={1}
+                minLines={1}
+                multiline={ false }
+                placeholder="$"
+                selectAllOnFocus={ true}
+                confirmOnEnterKey={ true }
+                value={ '5000' }
+                onChange={ this.handleInitialInvestmentChange }
+              />
+            </td>
+          </tr>
+          <tr>
             <td>Rebalancing Final:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
           <tr>
             <td>Holding Final:</td>
-            <td>$92,416 (1,848%)</td>
-          </tr>
-          <tr>
-            <td>Initial Investment:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
           <tr>
             <td>Rebalanced:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
           <tr>
             <td>Trading Fee:</td>
-            <td>$92,416 (1,848%)</td>
+            <td>xxx</td>
           </tr>
         </tbody>
       </HTMLTable>

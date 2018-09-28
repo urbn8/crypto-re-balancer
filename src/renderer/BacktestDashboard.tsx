@@ -1,19 +1,9 @@
-import * as path from 'path'
-import * as fs from 'fs'
-import * as React from "react";
-import { Chart } from 'chart.js'
-import * as Color from 'color'
-import axios from 'axios'
-
-import CandleMgoRepo from '../common/CandleMgoRepo'
-import backtest from "../common/backtest";
-import { Chandelier } from '../common/Chandelier';
-import { Asset, AssetSymbol } from '../common/Asset';
-
-import CandleStickChart from './CandleStickChart'
+import axios from 'axios';
 import { CandleChartResult } from 'binance-api-node';
-import { AdvisorPeriodic } from '../common/AdvisorPeriodic';
-import { oneDayInMilliseconds } from '../common/intervalPresets';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as React from "react";
+import CandleMgoRepo from '../common/CandleMgoRepo';
 
 declare var __static: string
 declare var CanvasJS: any
@@ -21,7 +11,7 @@ declare var CanvasJS: any
 const candleRepo = new CandleMgoRepo()
 
 interface IState {
-  candlesByAssets: Map<AssetSymbol, CandleChartResult[]>
+  candlesByAssets: Map<string, CandleChartResult[]>
 }
 
 export default class BacktestDashboard extends React.Component<any, IState> {
@@ -70,7 +60,6 @@ export default class BacktestDashboard extends React.Component<any, IState> {
     //   },
     // ]
 
-
     // const balanceOnceADayResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(oneDayInMilliseconds, 0))
     // const noBalanceResult = await backtest().backtest(new Chandelier(assets, candleRepo), new AdvisorPeriodic(0, 0))
 
@@ -81,7 +70,9 @@ export default class BacktestDashboard extends React.Component<any, IState> {
     // const dataPoints = balanceOnceADayResult.porfolioBalanceHistoryXY
     // console.log('dataPoints', dataPoints)
 
-    const resp = await axios.get('http://localhost:8080/backtest?source=unsafesmooth_t')
+    const API_URL = process.env.ELECTRON_WEBPACK_APP_API_URL || 'http://localhost:8080'
+
+    const resp = await axios.get(`${ API_URL }/backtest?source=unsafesmooth_t`)
     console.log('resp.data.default.length', resp.data.default[0], resp.data.balanced[0])
     const data = [
       {

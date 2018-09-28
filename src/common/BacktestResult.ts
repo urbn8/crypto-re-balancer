@@ -1,6 +1,6 @@
 import { MultiAssetsCandle } from "./MultiAssetsCandle";
 import { PorfolioCandle } from "./PorfolioCandle";
-import { AssetSymbol, Asset } from "./Asset";
+import { Asset } from "./Asset";
 import { Big } from "big.js";
 import { CandleChartResult } from "binance-api-node";
 import { Timeseries, SafeSmoother, UnsafeSmoother } from "./TimeseriesHelper";
@@ -10,7 +10,7 @@ const smoother = new UnsafeSmoother(5000)
 
 // roundtrips, transaction
 export class BacktestResult {
-  constructor(public assets: Asset[], public candlesByAssets: Map<AssetSymbol, CandleChartResult[]>, public ohlcCandles: MultiAssetsCandle[], public porfolioCandles: PorfolioCandle[]) { }
+  constructor(public assets: Asset[], public candlesByAssets: Map<string, CandleChartResult[]>, public ohlcCandles: MultiAssetsCandle[], public porfolioCandles: PorfolioCandle[]) { }
   get porfolioBalanceHistoryXY(): {
     x: Date;
     y: number;
@@ -47,8 +47,8 @@ export class BacktestResult {
     // return history;
   }
 
-  get assetsBalanceHistory(): Map<AssetSymbol, [number, Big][]> {
-    const m: Map<AssetSymbol, [number, Big][]> = new Map();
+  get assetsBalanceHistory(): Map<string, [number, Big][]> {
+    const m: Map<string, [number, Big][]> = new Map();
     for (const asset of this.assets) {
       m.set(asset.symbol, []);
     }
@@ -62,11 +62,11 @@ export class BacktestResult {
     return m;
   }
 
-  get assetsBalanceHistoryXY(): Map<AssetSymbol, {
+  get assetsBalanceHistoryXY(): Map<string, {
     x: number;
     y: number;
   }[]> {
-    const m: Map<AssetSymbol, {
+    const m: Map<string, {
       x: number;
       y: number;
     }[]> = new Map();

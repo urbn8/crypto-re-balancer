@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { configure } from "mobx"
 
 import "@blueprintjs/core/lib/css/blueprint.css"
 
@@ -7,9 +8,11 @@ import "@blueprintjs/core/lib/css/blueprint.css"
 import './reset.css'
 import './index.css'
 
+configure({enforceActions: 'observed'})
+
 let render = () => {
   // const App = require('./Chart').default;
-  const App = require('./components/BacktestDashboardContainer').default;
+  const App = require('./components/BacktestPage/BacktestPage').default;
   ReactDOM.render(
     React.createElement(App, null, null),
     document.getElementById('app')

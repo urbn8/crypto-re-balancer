@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import * as _ from 'lodash'
-import { Asset, AssetSymbol } from "./Asset";
+import { Asset, string } from "./Asset";
 import CandleRepo from "./CandleRepo";
 import { MultiAssetsCandle } from "./MultiAssetsCandle";
 import { MultiAssetsCandleFactory } from "./MultiAssetsCandleFactory";
@@ -8,7 +8,7 @@ import { CandleChartResult } from 'binance-api-node';
 
 export class Chandelier {
   public candles: MultiAssetsCandle[]
-  public candlesByAssets: Map<AssetSymbol, CandleChartResult[]>
+  public candlesByAssets: Map<string, CandleChartResult[]>
 
   constructor(
     public assets: Asset[],

@@ -1,10 +1,13 @@
 import * as React from "react";
+import * as path from 'path'
 import { observer } from "mobx-react"
 import { Button, Card, Elevation, H2, H4, Divider, Spinner } from "@blueprintjs/core"
 import { Symbol } from 'binance-api-node';
 import styled from 'styled-components'
 import Scrollbars from 'react-custom-scrollbars'
-import { IBacktestAsset } from "./BacktestDashboardContainer";
+import { IBacktestAsset } from "./store/store";
+
+declare const __static : string
 
 interface IProps {
   data: {
@@ -103,7 +106,9 @@ class Asset extends React.Component<IAssetProps, {hover: boolean}> {
         onClick={ this.props.onClick }
       >
         <Card interactive={true} elevation={Elevation.TWO}>
-          <AssetImg src={ `cryptocurrency-icons/svg/${ selected ? 'color' : 'white' }/${ symbol.toLowerCase() }.svg` }/>
+          {/* <AssetImg src={ require(path.join(__static, `cryptocurrency-icons/svg/${ selected ? 'color' : 'white' }/${ symbol.toLowerCase() }.svg`)) }/> */}
+          {/* <AssetImg src={ `cryptocurrency-icons/svg/${ selected ? 'color' : 'white' }/${ symbol.toLowerCase() }.svg` }/> */}
+          <AssetImg src={ `file:///${ __static }/cryptocurrency-icons/svg/${ selected ? 'color' : 'white' }/${ symbol.toLowerCase() }.svg` }/>
           <AssetName>{ name }</AssetName>
         </Card>
       </AssetWrapper>
