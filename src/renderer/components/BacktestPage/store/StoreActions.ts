@@ -84,7 +84,7 @@ export default class StoreActions {
     // const assets = propotions.map((propotion) => propotion.symbol + ':' + propotion.ratio).join(',')
     const assets = propotions.map((propotion) => propotion.symbol).join(',')
 
-    const url = `${ API_URL }/backtest/default?rebalancePeriodUnit=${ rebalancePeriodUnit }&rebalancePeriod=${ rebalancePeriod }&assets=${ assets }`
+    const url = `${ API_URL }/backtest?rebalancePeriodUnit=${ rebalancePeriodUnit }&rebalancePeriod=${ rebalancePeriod }&assets=${ assets }`
     console.log('url', url)
     
     const resp = yield axios.get(url)
